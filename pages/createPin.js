@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { MdDelete } from 'react-icons/md';
-
 import { categories } from '../lib/Data';
-import { client } from '../lib/sanityClient';
 import { useRouter } from 'next/router';
-
+import axios from 'axios';
 import { useSession } from 'next-auth/react';
 
 const CreatePin = ({ user }) => {
@@ -22,51 +19,72 @@ const CreatePin = ({ user }) => {
 
   const router = useRouter();
 
-  const uploadImage = (e) => {
+  const uploadImage = async (e) => {
     const selectedFile = e.target.files[0];
+    console.log(selectedFile);
+    const formData = new FormData();
+    formData.append(e.target.name,selectedFile);
+
     // uploading asset to sanity
     if (selectedFile.type === 'image/png' || selectedFile.type === 'image/svg' || selectedFile.type === 'image/jpeg' || selectedFile.type === 'image/gif' || selectedFile.type === 'image/tiff') {
       setWrongImageType(false);
       setLoading(true);
-      client.assets
-        .upload('image', selectedFile, { contentType: selectedFile.type, filename: selectedFile.name })
-        .then((document) => {
-          setImageAsset(document);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log('Upload failed:', error.message);
-        });
+      const config = {
+        headers: { 'content-type': 'multipart/form-data' }
+      };
+      const response = await axios.post('/api/utils/upload/uploadImage', formData, config);
+     
+      setImageAsset(response.data);
+      setLoading(false);
+      // client.assets
+      //   .upload('image', selectedFile, { contentType: selectedFile.type, filename: selectedFile.name })
+      //   .then((document) => {
+      //     setImageAsset(document);
+      //     setLoading(false);
+      //   })
+      //   .catch((error) => {
+      //     console.log('Upload failed:', error.message);
+      //   });
     } else {
       setLoading(false);
       setWrongImageType(true);
     }
   };
 
-  const savePin = () => {
+  const savePin = async() => {
     if (title && about && destination && imageAsset?._id && category) {
-      const doc = {
-        _type: 'pin',
+      const response = await axios.post('/api/utils/upload/saveImage', {
         title,
         about,
         destination,
-        image: {
-          _type: 'image',
-          asset: {
-            _type: 'reference',
-            _ref: imageAsset?._id,
-          },
-        },
-        userId: session.user.id,
-        postedBy: {
-          _type: 'postedBy',
-          _ref: session.user.id,
-        },
+        imageAsset,
         category,
-      };
-      client.create(doc).then(() => {
-        router.push('/');
-      });
+        userId: session.user.id
+      }
+      );
+      router.push('/');
+      // const doc = {
+      //   _type: 'pin',
+      //   title,
+      //   about,
+      //   destination,
+      //   image: {
+      //     _type: 'image',
+      //     asset: {
+      //       _type: 'reference',
+      //       _ref: imageAsset?._id,
+      //     },
+      //   },
+      //   userId: session.user.id,
+      //   postedBy: {
+      //     _type: 'postedBy',
+      //     _ref: session.user.id,
+      //   },
+      //   category,
+      // };
+      // client.create(doc).then(() => {
+      //   router.push('/');
+      // });
     } else {
       setFields(true);
 
@@ -113,17 +131,17 @@ const CreatePin = ({ user }) => {
                 </div>
                 <input
                   type="file"
-                  name="upload-image"
+                  name="uploadedFile"
                   onChange={uploadImage}
                   className="w-0 h-0"
                 />
-              </label>
+                </label>
             ) }{(imageAsset) && (
               <div className="relative h-full">
                 <img
                   src={imageAsset?.url}
                   alt="uploaded-pic"
-                  className="h-full w-full"
+                  className="h-full w-full object-cover"
                 />
                 <button
                   type="button"

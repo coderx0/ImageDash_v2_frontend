@@ -1,4 +1,4 @@
-import { client } from "../lib/sanityClient";
+import { client,cdnClient } from "../lib/sanityClient";
 import { feedQuery } from "../lib/Data";
 import Feed from "../components/Feed";
 import { useEffect } from "react";
@@ -46,7 +46,7 @@ export default function Home({ pins }) {
 
 export async function getStaticProps() {
     
-  const data = await client.fetch(feedQuery);
+  const data = await cdnClient.fetch(feedQuery);
 
   return {
       props: {

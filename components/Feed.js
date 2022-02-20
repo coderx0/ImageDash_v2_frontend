@@ -2,10 +2,10 @@ import Masonry from "react-masonry-css";
 import Pin from "./Pin";
 
 const breakPointObj = {
-    default: 3,
-    1000: 2,
-    700: 1,
-    500: 1
+    default: 4,
+    1200: 3,
+    900: 2,
+    600: 1
 }
 
 const Feed = ({pins}) => {

@@ -36,7 +36,7 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
   alreadyLiked = alreadyLiked?.length > 0 ? alreadyLiked : [];
 
   const likePin = (id) => {
-    if (alreadyLiked?.length === 0) {
+    if (alreadyLiked?.length === 0 && session) {
       setLikingPost(true);
       fetch(`/api/utils/like/image_${id}/user_${session.user.id}`).then((response) => response.json()).then((data) => {
         setPinLikes(data.message);
@@ -50,7 +50,7 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
   alreadySaved = alreadySaved?.length > 0 ? alreadySaved : [];
 
   const savePin = (id) => {
-    if (alreadySaved?.length === 0) {
+    if (alreadySaved?.length === 0 && session) {
       setSavingPost(true);
       fetch(`/api/utils/save/image_${id}/user_${session.user.id}`).then((response) => response.json()).then(data => {
         setPinSaves(data.message);
@@ -60,7 +60,7 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
   };
 
   const addComment = () => {
-    if (comment) {
+    if (comment && session) {
       setAddingComment(true);
       fetch(`/api/utils/comment/${pinId}/${session.user.id}/${comment}`).then(response => response.json()).then(data => {
         setComment('');
@@ -75,7 +75,7 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
   alreadyFollowed = alreadyFollowed?.length > 0 ? alreadyFollowed : [];
 
   const followUser = (id,userId) => {
-    if (alreadyFollowed?.length === 0) {
+    if (alreadyFollowed?.length === 0 && session) {
 
       fetch(`/api/utils/follow/${id}/${userId}`).then(response => response.json()).then(data => {
         if (data.message === "success") {
@@ -119,7 +119,7 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
                                   </div>
                     </a>
                           </Link>
-                <button className='btn bg-[#ff8906] text-[#fffffe] font-bold' onClick={() => { followUser(pinDetail.postedBy._id, session.user.id) }}>
+                <button className='btn bg-[#ff8906] text-[#fffffe] font-bold' onClick={() => { followUser(pinDetail.postedBy._id, session?.user.id) }}>
                   {followSuccess?'Following':alreadyFollowed.length > 0 ? 'Following' : 'Follow'}
                           </button>
             </div>
@@ -151,13 +151,16 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
             <h2 className="mt-5 text-2xl font-semibold">Comments</h2>
             <div className="max-h-[220px] overflow-y-auto">
               {pinDetail?.comments?.map((item) => (
-                <div className="flex gap-1 mt-2 items-center rounded-lg" key={item.comment}>
+                <div className="flex gap-2 mt-2 relative overflow-hidden h-12 items-center rounded-lg" key={item.comment}>
+                  <div className='w-16 h-16 bg-red-400 rounded-full absolute -left-5'>
                   <img
                     src={item.postedBy?.image}
-                    className="w-8 h-8 object-cover rounded-full cursor-pointer"
+                    className="h-full w-full object-cover scale-2 rounded-full cursor-pointer"
                     alt="user-profile"
                   />
-                  <div className="flex flex-col">
+                  </div>
+                  
+                  <div className="ml-14 flex flex-col">
                     <p className="font-bold underline text-sm">{item.postedBy?.userName}</p>
                     <p className='text-md'>{item.comment}</p>
                   </div>

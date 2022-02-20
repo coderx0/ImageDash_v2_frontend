@@ -26,7 +26,7 @@ const Pin = ({ pin }) => {
   alreadyLiked = alreadyLiked?.length > 0 ? alreadyLiked : [];
 
   const likePin = (id) => { 
-    if (alreadyLiked?.length === 0 && session) {
+    if (alreadyLiked?.length === 0 && session && postedBy._id!==session?.user.id) {
       setLikingPost(true);
       fetch(`/api/utils/like/image_${id}/user_${session.user.id}`).then((response) => response.json()).then((data) => {
         setPinLikes(data.message);
@@ -36,7 +36,7 @@ const Pin = ({ pin }) => {
   };
   
   const savePin = (id) => {
-    if (alreadySaved?.length === 0 && session) {
+    if (alreadySaved?.length === 0 && session && postedBy._id!==session?.user.id) {
       setSavingPost(true);
       fetch(`/api/utils/save/image_${id}/user_${session.user.id}`).then((response) => response.json()).then(data => {
         setPinSaves(data.message);
@@ -52,7 +52,7 @@ const Pin = ({ pin }) => {
   return (
       <>
       <div
-        className="md:mx-1 my-4 md:p-0 z-10 rounded-lg border-4 border-slate-800" style={{backgroundColor:'rgba(17, 25, 40, 0.15)'}}>
+        className="md:mx-1 my-2 md:p-0 z-10 rounded-lg border-4 border-slate-800" style={{backgroundColor:'rgba(17, 25, 40, 0.15)'}}>
         <div
           onMouseEnter={() => setPostHovered(true)}
           onMouseLeave={() => setPostHovered(false)}

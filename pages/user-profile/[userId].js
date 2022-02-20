@@ -8,10 +8,10 @@ import { useSession,signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 const breakPointObj = {
-    default: 3,
-    1500: 3,
-    1000: 2,
-    700:1
+  default: 4,
+  1100: 3,
+  900: 2,
+  600: 1
 }
 
 
@@ -19,48 +19,45 @@ const activeBtnStyles = 'bg-red-500 text-white font-bold p-2 rounded-full w-20 o
 const notActiveBtnStyles = 'bg-primary mr-4 text-black font-bold p-2 rounded-full w-20 outline-none';
 
 const UserProfile = ({user}) => {
-  // const [user, setUser] = useState();
   const [pins, setPins] = useState();
   const [text, setText] = useState('Created');
   const [activeBtn, setActiveBtn] = useState('created');
   const [uploadCount, setUploadCount] = useState(0);
-  
+  const [followSuccess, setFollowSuccess] = useState(false);
   const router = useRouter();
 
   const { userId } = router.query;
 
   const { data: session, status } = useSession();
 
-  // useEffect(() => {
-  //   const query = userQuery(userId);
-  //   client.fetch(query).then((data) => {
-  //     setUser(data[0]);
-  //   });
-  // }, [userId]);
-
   useEffect(() => {
     if (text === 'Created') {
-      // const createdPinsQuery = userCreatedPinsQuery(userId);
       fetch(`/api/data/createdPins/${userId}`).then(response => response.json()).then(data => {
         setPins(data.pins);
         setUploadCount(data.pins.length);
       });
-
-      // client.fetch(createdPinsQuery).then((data) => {
-      //   setPins(data);
-      //   setUploadCount(data.length);
-      // });
     } else {
-      // const savedPinsQuery = userSavedPinsQuery(userId);
       fetch(`/api/data/savedPins/${userId}`).then(response => response.json()).then(data => {
         setPins(data.pins);
       });
-
-      // client.fetch(savedPinsQuery).then((data) => {
-      //   setPins(data);
-      // });
     }
   }, [text, userId]);
+
+  let alreadyFollowed = user.followers?.filter((item) => item?.userId === session?.user?.id);
+  alreadyFollowed = alreadyFollowed?.length > 0 ? alreadyFollowed : [];
+
+ 
+  const followUser = (id,userId) => {
+    if (alreadyFollowed?.length === 0 && user._id !== session?.user.id) {
+
+      fetch(`/api/utils/follow/${id}/${userId}`).then(response => response.json()).then(data => {
+        if (data.message === "success") {
+          setFollowSuccess(true);
+        }
+      });
+      
+    }
+  }
 
   if (!user) return <h1>Loading Profile</h1>;
 
@@ -68,23 +65,28 @@ const UserProfile = ({user}) => {
     <div className="relative pb-2 h-full justify-center items-center">
       <div className="flex flex-col pb-5">
         <div className="relative flex flex-col mb-7">
-          <div className="flex flex-col justify-center items-center">
             <img
-              className=" w-full h-48 md:h-96 shadow-lg object-cover"
+              className=" w-full h-48 md:h-64 shadow-lg object-cover"
               src="https://source.unsplash.com/1600x900/?nature,photography,technology"
               alt="user-pic"
             />
-            <div className='w-32 h-32 -mt-12'>
+          <div className='flex justify-around lg:justify-center lg:gap-32 p-4 '>
+            <div className='flex gap-2 mr-2'>
             <img
-              className="rounded-full w-full h-full shadow-xl object-cover"
+              className="rounded-full w-12 h-12 md:w-16 md:h-16 shadow-xl object-cover"
               src={user.image}
               alt="user-pic"
             />
-            </div>
-          </div>
-          <h1 className="font-bold text-3xl text-center mt-3">
+              <div className='flex flex-col'>
+              <h1 className="font-bold text-xl md:text-3xl">
             {user.userName}
-          </h1>
+              </h1>
+            <p className='text-[12px] md:text-sm'>Just Wandering about here and there</p>
+            </div>
+            </div>
+            <button className='btn btn-sm md:btn-md mt-2 text-[12px]' onClick={() => { followUser(user._id,session.user.id);}}>{alreadyFollowed.length>0?'Following':'Follow'}</button>
+          </div>
+          
           <div className='flex justify-center gap-6 mt-6 md:text-lg'>
             <h1>{uploadCount} Images</h1>
             <h1>{user?.followers? user.followers.length:0} Followers</h1>

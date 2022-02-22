@@ -4,6 +4,8 @@ import { categories } from '../lib/Data';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import { motion } from 'framer-motion';
+import Layout from '../components/Layout';
 
 const CreatePin = ({ user }) => {
   const [title, setTitle] = useState('');
@@ -97,7 +99,9 @@ const CreatePin = ({ user }) => {
     }
   };
   return (
-      <div className="lg:h-[89vh] flex flex-col justify-center items-center">
+    <Layout>
+      <div
+      className="lg:h-[89vh] flex flex-col justify-center items-center">
       {fields && (
         <p className="text-red-500 mb-5 text-xl transition-all duration-150 ease-in ">Please add all fields.</p>
       )}
@@ -218,6 +222,7 @@ const CreatePin = ({ user }) => {
         </div>
       </div>
     </div>
+    </Layout>
   );
 };
 

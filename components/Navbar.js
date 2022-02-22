@@ -1,12 +1,14 @@
 import {React, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [userData, setUserData] = useState(null);
   const [authAlert, setAuthAlert] = useState(null);
   const searchInputRef = useRef();
+  const router = useRouter();
 
   useEffect(() => {
       if(session?.user?.id)
@@ -29,9 +31,8 @@ const Navbar = () => {
   const submitSearch = (event) => {
     event.preventDefault();
     const searchTerm = searchInputRef.current.value;
-    console.log(searchTerm);
-    searchInputRef.current.value = "";
-      }
+    router.push(`/search/${searchTerm}`);
+  }
 
     return (
       <>

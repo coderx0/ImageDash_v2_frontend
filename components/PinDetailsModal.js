@@ -1,30 +1,23 @@
-import React, { useState } from 'react';
-import { client, urlFor } from '../../lib/sanityClient';
+import React, { useEffect, useState } from 'react';
+import { urlFor } from '../lib/sanityClient';
 import Masonry from "react-masonry-css";
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import Pin from '../../components/Pin';
-import { pinDetailQuery,pinDetailMorePinQuery } from '../../lib/Data';
-import { motion } from 'framer-motion';
-import Layout from "../../components/Layout";
+import Pin from './Pin';
 
 const breakPointObj = {
-    default: 3,
-    1500: 3,
-    1000: 2,
-    700:1
+    default: 2,
+    500:1
 }
 
 
-const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
-  const router = useRouter();
+const PinDetailsModal = ({ pinDetail,setShowPinModal }) => {
+  
   const { data: session, status } = useSession();
 
-  const { pinId } = router.query;
-    
-  // const [pins, setPins] = useState();
-  const [pinDetail, setPinDetail] = useState(pinDetails);
+  const [pins, setPins] = useState();
+  const [moreDetails, setMoreDetails] = useState();
+
   const [comment, setComment] = useState('');
   const [addingComment, setAddingComment] = useState(false);
   const [likingPost, setLikingPost] = useState(false);
@@ -32,7 +25,20 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
   const [pinSaves, setPinSaves] = useState(null);
   const [pinLikes, setPinLikes] = useState(null);
   const [followSuccess, setFollowSuccess] = useState(false);
+  
+  useEffect(() => {
+    const element = document.getElementById("pinModal");
+      element.scrollTo(0, 0);
+      
+        fetch(`/api/data/pinDetails/${pinDetail._id}`).then(response => response.json()).then(data => {
+            setPins(data.morePins);
+            setMoreDetails(data.pinData);
+        });
 
+    }, [pinDetail._id]);
+  
+
+    
   let alreadyLiked = pinLikes ? pinLikes.filter((item) => item.userId === session?.user.id) :
   pinDetail?.likes?.filter((item) => item?.likedBy?._id === session?.user?.id);
   alreadyLiked = alreadyLiked?.length > 0 ? alreadyLiked : [];
@@ -64,16 +70,15 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
   const addComment = () => {
     if (comment && session) {
       setAddingComment(true);
-      fetch(`/api/utils/comment/${pinId}/${session.user.id}/${comment}`).then(response => response.json()).then(data => {
+      fetch(`/api/utils/comment/${pinDetail._id}/${session.user.id}/${comment}`).then(response => response.json()).then(data => {
         setComment('');
-        setPinDetail((prevData) => ({ ...prevData, comments: data.comments }));
+        setMoreDetails((prevData) => ({ ...prevData, comments: data.comments }));
         setAddingComment(false);
       })
     }
   };
 
-
-  let alreadyFollowed = pinDetail?.postedBy?.followers?.filter((item) => item?.followedBy?._id === session?.user?.id);
+  let alreadyFollowed = moreDetails?.postedBy?.followers?.filter((item) => item?.followedBy?._id === session?.user?.id);
   alreadyFollowed = alreadyFollowed?.length > 0 ? alreadyFollowed : [];
 
   const followUser = (id,userId) => {
@@ -88,14 +93,25 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
     }
   }
 
+    const closeModal = (e) => {
+        if (e.target.id === "pinBackdrop") {
+            setShowPinModal(null);
+        }
+    }
 
   return (
-    <Layout>
+      <div className='fixed top-0 left-0 right-0 backdrop-blur-md' id="pinBackdrop" onClick={closeModal}>
       <div
-      key={pinDetails._id}
-      className="bg-center bg-no-repeat bg-cover bg-fixed" style={{ backgroundImage: `url("https://cdn.pixabay.com/photo/2020/01/03/00/09/mountains-4737080_960_720.png")` }}>
-      
-        {!pinDetail && <h1 className='w-full h-[90vh] flex justify-center items-center bg-red-300'>Wait</h1>}
+        id="pinModal"
+      className="bg-stone-900 mt-16 md:mt-20 h-[90vh] md:h-[90vh] overflow-x-hidden overflow-y-auto md:mx-12 xl:mx-32">
+        <button
+          onClick={()=>setShowPinModal(null)}
+          className='z-10 sticky top-0 md:hidden btn btn-error rounded-none mb-1 w-full text-lg font-bold'>
+          Close
+        </button>
+        {!pinDetail &&
+          <h1 className='w-full h-[90vh] flex justify-center items-center bg-red-300'>
+            Wait</h1>}
       {pinDetail && (
         <div className="flex lg:flex-row flex-col justify-center conatiner mx-auto" style={{ maxWidth: '1500px'}}>
           <div>
@@ -106,20 +122,19 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
             />
           </div>
           <div className="w-full p-5 flex-1 bg-[#0f0e17] md:min-w-[25rem] lg:max-w-[35rem]">
-            <div className='border-b-2 pb-8'>
+            <div className='border-b-2 pb-4'>
               <h1 className="text-4xl font-bold break-words mt-3 text-[#fffffe]">
                 {pinDetail.title}
               </h1>
-              <p className="mt-3 text-[#a7a9be] text-lg">{pinDetail.about}</p>
-              
+              <p className="mt-3 text-[#a7a9be] text-lg">{moreDetails?.about}</p>
             </div>
-            <div className='mt-8 flex justify-between text-xl border-b-2 pb-6'>
+            <div className='mt-6 flex justify-between text-xl border-b-2 pb-6'>
                       <Link href={`/user-profile/${pinDetail?.postedBy?._id}`}>
                           <a className='flex gap-2 '>
                           <img src={pinDetail?.postedBy?.image} className="w-12 h-12 object-cover rounded-full" alt="user-profile" />
                                   <div className="font-bold">
                                       <p>{pinDetail?.postedBy?.userName}</p>
-                                    <p className='text-sm font-normal'>{pinDetail?.postedBy?.followers? pinDetail.postedBy.followers.length:0} Followers</p>
+                                    <p className='text-sm font-normal'>{moreDetails?.postedBy?.followers? moreDetails.postedBy.followers.length:0} Followers</p>
                                   </div>
                     </a>
                           </Link>
@@ -151,10 +166,16 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
   >
     download
   </a>
-                      </div>
-            <h2 className="mt-5 text-2xl font-semibold">Comments</h2>
+            </div>
+          </div>
+        </div>
+        )}
+        
+        <div className='flex py-2 px-4 flex-col md:flex-row'>
+          <div className='md:w-[40%]'>
+          <h2 className="mt-5 text-2xl font-semibold">Comments</h2>
             <div className="max-h-[220px] overflow-y-auto">
-              {pinDetail?.comments?.map((item) => (
+              {moreDetails?.comments?.map((item) => (
                 <div className="flex my-4  mx-2 border-stone-700 bg-stone-900 relative overflow-visible border-2 h-12 items-center rounded-box" key={item.comment}>
                   <div className='w-[3.3rem] h-[3.3rem] bg-red-400 rounded-full absolute -left-2'>
                   <img
@@ -189,54 +210,27 @@ const PinDetail = ({pinDetail:pinDetails,morePin:pins}) => {
               >
                 {addingComment ? 'Doing...' : 'Done'}
               </button>
-            </div>
           </div>
-        </div>
-      )}
-      {pins?.length > 0 && (
+          </div>
+          <div className='md:w-[60%] '>
+          {pins?.length > 0 && (
         <h2 className="text-center font-bold text-2xl mt-8 mb-4">
           More like this
         </h2>
       )}
-      {pins ? (
-              <Masonry className="p-4 flex animate-slide-fwd" breakpointCols={breakPointObj}>
-                {pins?.map(pin => <Pin key={pin._id} pin={pin}/>)}
+              {pins ? (    
+               <Masonry className="p-4 flex animate-slide-fwd" breakpointCols={breakPointObj}>
+            {pins?.map(pin => <Pin key={pin._id} pin={pin} setShowPinModal={setShowPinModal}/>)}
             </Masonry>
       ) : (
-        <h1>Loading More Pins...</h1>
+        <h1 className='w-full text-center font-semibold mt-4 text-xl'>Loading More Pins...</h1>
         )}
+          </div>
         </div>
-    </Layout>
+        </div>
+     </div>
+    
   );
 };
 
-export default PinDetail;
-
-export async function getServerSideProps(context) {
-  const { pinId } = context.params;
-  const query = pinDetailQuery(pinId);
-
-  const data = await client.fetch(`${query}`);
-  let morePinData = null;
-  if (data[0]) {
-      const query1 = pinDetailMorePinQuery(data[0]);
-      morePinData = await client.fetch(query1);
-  }
-
-  return {
-    props: {
-      pinDetail: data[0],
-      morePin:morePinData
-    }
-  }
-}
-
-
-// <div className="flex items-center justify-between">
-// <div className="flex gap-2 items-center">
-
-// </div>
-// <a href={pinDetail.destination} target="_blank" rel="noreferrer">
-//   {pinDetail.destination?.slice(8)}
-// </a>
-// </div>
+export default PinDetailsModal;

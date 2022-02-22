@@ -1,14 +1,23 @@
 import '../styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
-import Layout from '../components/Layout';
+import Navbar from '../components/Navbar'
+import { motion, AnimatePresence } from 'framer-motion'
 
 function MyApp({
-  Component,
-  pageProps: { session, ...pageProps } }) {
+  Component,router,pageProps: {session, ...pageProps } }) {
+  
+  const url = `http://localhost:3000/${router.route}`;
+
   return <SessionProvider session={session}>
-    <Layout>
-      <Component {...pageProps}/>
-    </Layout>
+    
+    <Navbar />
+    <AnimatePresence
+      exitBeforeEnter
+      initial={false}
+    >
+        <Component {...pageProps} canonical={url} key={url}/>
+      </AnimatePresence>
+      
   </SessionProvider>
 }
 

@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useRouter } from 'next/router';
 import { useSession } from "next-auth/react";
 import {motion} from "framer-motion";
+import Image from "next/image";
 
-const Pin = ({ pin }) => {
+const Pin = ({ pin,setShowPinModal }) => {
   const [postHovered, setPostHovered] = useState(false);
 
   const router = useRouter();
@@ -46,22 +47,29 @@ const Pin = ({ pin }) => {
   };
 
   const showPin = () => {
-    router.push(`/pindetails/${_id}`);
+    // router.push(`/pindetails/${_id}`);
+    setShowPinModal(pin);
   }
 
   return (
       <>
       <div
-        className="md:mx-1 my-2 md:p-0 z-10 rounded-lg border-4 border-slate-800" style={{backgroundColor:'rgba(17, 25, 40, 0.15)'}}>
+        className="md:mx-1 my-2 md:p-0 z-10 border-2 border-slate-700"
+        style={{
+          backgroundColor: 'rgba(17, 25, 40, 0.15)',
+        }}>
         <div
           onMouseEnter={() => setPostHovered(true)}
           onMouseLeave={() => setPostHovered(false)}
           className="relative cursor-zoom-in w-auto hover:shadow-lg overflow-hidden transition-all duration-500 ease-in-out"
         >
-          <div className="w-full overflow-hidden">
+          <div className="w-full relative overflow-hidden">
             <img
               onClick={showPin}
-              className="w-full hover:scale-125 transition duration-1000" src={image.asset.url} alt="user-post" />
+              src={image.asset.url}
+              className="w-full h-full hover:scale-125 transition duration-1000"
+              alt="user-post" 
+              />
           </div>
           {
             postHovered && (
@@ -82,7 +90,7 @@ const Pin = ({ pin }) => {
                 initial={{ y: -50 }}
                 animate={{ y: 0 }}
                 transition={{duration:0.5}}
-                className="absolute font-semibold top-0 right-0 pr-4 p-3 backdrop-blur-sm">
+                className="absolute font-semibold top-0 right-0 pr-4 p-1 rounded-box backdrop-blur-sm">
             <img src={postedBy.image} className="ml-1 object-cover cursor-pointer rounded-full w-8 h-8 inline-block" onClick={()=>{router.push(`/user-profile/${postedBy._id}`)}}/>
             <span className="ml-2 sm:text-sm md:text-md lg:text-lg cursor-pointer" onClick={()=>{router.push(`/user-profile/${postedBy._id}`)}}>
               {postedBy.userName}

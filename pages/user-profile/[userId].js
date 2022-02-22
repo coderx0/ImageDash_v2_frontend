@@ -6,7 +6,8 @@ import { client } from '../../lib/sanityClient';
 import Masonry from "react-masonry-css";
 import { useSession,signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
-
+import Layout from "../../components/Layout";
+import Feed from "../../components/Feed";
 const breakPointObj = {
   default: 4,
   1100: 3,
@@ -31,16 +32,18 @@ const UserProfile = ({user}) => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (text === 'Created') {
-      fetch(`/api/data/createdPins/${userId}`).then(response => response.json()).then(data => {
-        setPins(data.pins);
-        setUploadCount(data.pins.length);
-      });
-    } else {
-      fetch(`/api/data/savedPins/${userId}`).then(response => response.json()).then(data => {
-        setPins(data.pins);
-      });
-    }
+    if (userId) {
+      if (text === 'Created') {
+        fetch(`/api/data/createdPins/${userId}`).then(response => response.json()).then(data => {
+          setPins(data.pins);
+          setUploadCount(data.pins.length);
+        });
+      } else {
+        fetch(`/api/data/savedPins/${userId}`).then(response => response.json()).then(data => {
+          setPins(data.pins);
+        });
+      }
+  }
   }, [text, userId]);
 
   let alreadyFollowed = user.followers?.filter((item) => item?.userId === session?.user?.id);
@@ -62,7 +65,8 @@ const UserProfile = ({user}) => {
   if (!user) return <h1>Loading Profile</h1>;
 
   return (
-    <div className="relative pb-2 h-full justify-center items-center">
+    <Layout>
+      <div className="relative pb-2 h-full justify-center items-center">
       <div className="flex flex-col pb-5">
         <div className="relative flex flex-col mb-7">
             <img
@@ -127,10 +131,11 @@ const UserProfile = ({user}) => {
           </button>
         </div>
 
-        <div className="px-2">
-        <Masonry className="flex animate-slide-fwd" breakpointCols={breakPointObj}>
+          <div className="px-2">
+            <Feed pins={pins}/>
+        {/* <Masonry className="flex animate-slide-fwd" breakpointCols={breakPointObj}>
                 {pins?.map(pin => <Pin key={pin._id} pin={pin}/>)}
-            </Masonry>
+            </Masonry> */}
         </div>
 
         {pins?.length === 0 && (
@@ -141,13 +146,14 @@ const UserProfile = ({user}) => {
       </div>
 
     </div>
+    </Layout>
   );
 };
 
 export default UserProfile;
 
 export async function getServerSideProps(context) {
-  const { userId } = context.params;
+  const { userId } = context?.params;
   const query = userQuery(userId);
 
   const data = await client.fetch(query);

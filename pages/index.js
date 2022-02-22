@@ -4,6 +4,7 @@ import Feed from "../components/Feed";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { nanoid } from "nanoid";
+import { motion } from "framer-motion";
 
 export default function Home({ pins }) { 
 
@@ -28,7 +29,7 @@ export default function Home({ pins }) {
   }, [user?.id]);
   
   return (
-    <>
+  <>
         <div className="bg-fixed bg-center bg-no-repeat bg-cover h-96 flex justify-center items-center"
       style={{backgroundImage:`url("https://i.pinimg.com/originals/ed/e1/d6/ede1d669ed75699be57f39d14bb4306b.jpg")`}}>
         
@@ -36,11 +37,10 @@ export default function Home({ pins }) {
             Share Images and connect with people
           </div>
       </div>
-      <div className="bg-center bg-no-repeat bg-cover bg-fixed" style={{backgroundImage:`url("https://cdn.pixabay.com/photo/2020/01/03/00/09/mountains-4737080_960_720.png")`}}>
+      <div className="bg-center bg-no-repeat bg-cover bg-fixed">
       <Feed pins={pins}/>
-        </div>
-    </>
-        // </div>
+      </div>
+  </>
   )
 }
 

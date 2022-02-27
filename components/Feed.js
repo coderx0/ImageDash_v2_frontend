@@ -3,6 +3,8 @@ import Pin from "./Pin";
 import { useState } from "react";
 import PinDetailsModal from "./PinDetailsModal";
 import { motion,AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
+
 
 const breakPointObj = {
     default: 4,
@@ -14,10 +16,14 @@ const breakPointObj = {
 const Feed = ({pins}) => {
 
     const [showPinModal, setShowPinModal] = useState(null);
-
+    const { data: session, status } = useSession();
+    
     return (
         <>
-        <Masonry className="px-2 md:px-4 pt-8 mx-auto flex animate-slide-fwd" breakpointCols={breakPointObj}>
+            <Masonry
+                className="px-2 md:px-4 pt-8 flex"
+                columnClassName="bg-clip-padding"
+                breakpointCols={breakPointObj}>
                 {pins?.map(pin => <Pin key={pin._id} pin={pin} setShowPinModal={setShowPinModal}/>)}
             </Masonry>
             <AnimatePresence exitBeforeEnter>
@@ -31,7 +37,7 @@ const Feed = ({pins}) => {
                         exit={{ opacity:0,y: 200,position:"fixed",top:0,left:0,right:0,bottom:0 }}
                         transition={{ type: 'linear' }}                    
                         >
-                <PinDetailsModal pinDetail={showPinModal} setShowPinModal={setShowPinModal} />
+                <PinDetailsModal session={session}  pinDetail={showPinModal} setShowPinModal={setShowPinModal} />
                 </motion.div>
             }
             </AnimatePresence>

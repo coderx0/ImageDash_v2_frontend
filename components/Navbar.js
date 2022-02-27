@@ -41,7 +41,7 @@ const Navbar = () => {
 </div>}
         <div className="bg-stone-900 font-bold h-16 relative sticky top-0 z-20 text-3xl flex justify-between">
        
-        <span className="pt-3 pb-2 pl-2">
+        <span className="pt-4 md:pt-3 pb-2 pl-2 text-lg md:text-3xl">
             <Link href="/">IDash</Link>
           </span>
           <form className="flex my-3 ml-6 relative" onSubmit={submitSearch}>

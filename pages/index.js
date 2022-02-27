@@ -1,15 +1,18 @@
 import { client,cdnClient } from "../lib/sanityClient";
-import { feedQuery } from "../lib/Data";
+import { feedQuery,collectionFeedQuery } from "../lib/Data";
 import Feed from "../components/Feed";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { nanoid } from "nanoid";
 import { motion } from "framer-motion";
+import { categories } from "../lib/Data";
+import CollectionFeed from "../components/CollectionFeed";
+import { useRouter } from "next/router";
 
-export default function Home({ pins }) { 
+export default function Home({ pins,collections }) { 
 
   const { data: session, status } = useSession();
-
+  const router = useRouter();
   const user = session?.user;
   
   useEffect(() => {
@@ -28,6 +31,10 @@ export default function Home({ pins }) {
     }
   }, [user?.id]);
   
+  const searchCategory = (searchTerm) => {
+    router.push(`/search/${searchTerm}`);
+  };
+
   return (
   <>
         <div className="bg-fixed bg-center bg-no-repeat bg-cover h-96 flex justify-center items-center"
@@ -37,8 +44,24 @@ export default function Home({ pins }) {
             Share Images and connect with people
           </div>
       </div>
-      <div className="bg-center bg-no-repeat bg-cover bg-fixed">
-      <Feed pins={pins}/>
+      <div className="overflow-auto whitespace-nowrap bg-slate-900">
+        {categories.map(category => <div
+          className="hover:bg-slate-800 inline-block p-2 text-center w-[80px] rounded-full"
+          key={category.name}
+        onClick={()=>searchCategory(category.name)}
+        >
+          <img src={category.image}
+            alt={category.name} 
+            className="h-14 w-14 border-2 border-sky-800 mx-auto rounded-full object-cover"
+            />
+          <h1>{category.name}</h1>
+      </div>)}
+      </div>
+      <div className="">
+      <h1 className="pt-2 text-center font-bold text-2xl">Pins</h1>
+        <Feed pins={pins} />
+      <h1 className="p-2 text-center font-bold text-2xl">Collections</h1>
+        <CollectionFeed collections={collections}/>
       </div>
   </>
   )
@@ -47,10 +70,12 @@ export default function Home({ pins }) {
 export async function getStaticProps() {
     
   const data = await cdnClient.fetch(feedQuery);
-
+  const collectionData = await cdnClient.fetch(collectionFeedQuery);
+  
   return {
       props: {
-          pins:data
+      pins: data,
+      collections:collectionData
       },
       revalidate: 3600
   }

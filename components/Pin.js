@@ -71,19 +71,7 @@ const Pin = ({ pin,setShowPinModal }) => {
               alt="user-post" 
               />
           </div>
-          {
-            postHovered && (
-              <motion.div
-                initial={{ x: 80 }}
-                animate={{ x: 0 }}
-                transition={{duration:1}}
-                className="absolute bottom-0 right-0">
-              <div className="p-2 bg-white rounded-lg text-gray-900 font-bold text-sm">
-              <a href={destination} target="_blank" rel="noreferrer">{destination.slice(8,26)}</a>
-              </div>
-              </motion.div>
-            )
-          }
+    
           {
             postHovered &&
             <motion.div
@@ -124,8 +112,11 @@ const Pin = ({ pin,setShowPinModal }) => {
             )
           }
         </div>
-        <div className="backdrop-sepia backdrop-blur-md flex justify-around items-center">
-          <h1 className="flex-1 pl-4 text-lg font-semibold">{title}</h1>
+      
+          <div className="bg-slate-900 flex justify-around items-center">
+          <h1 className="flex-1 pl-4 text-lg font-semibold">
+            {title}
+          </h1>
           <span className="flex text-md w-16 justify-around p-2">
             {pinLikes? pinLikes.length: pin?.likes?.length}
             {alreadyLiked.length > 0 &&

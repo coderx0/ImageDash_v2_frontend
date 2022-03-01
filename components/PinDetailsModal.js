@@ -157,16 +157,19 @@ const PinDetailsModal = (props) => {
       <div className='fixed top-0 left-0 right-0 bottom-0 backdrop-blur-md' id="pinBackdrop" onClick={closeModal}>
       <div
         id="pinModal"
-      className="bg-[#0f0e17] mt-16 md:mt-16 h-[90vh] md:h-[90vh] overflow-x-hidden overflow-y-auto md:mx-8 xl:mx-24">
+      className="bg-base-100 mt-16 md:mt-16 h-[92vh] md:h-[90vh] overflow-x-hidden overflow-y-auto md:mx-8 xl:mx-24">
         <button
           onClick={()=>setShowPinModal(null)}
           className='z-10 sticky top-0 md:hidden btn btn-error rounded-none mb-1 w-full text-lg font-bold'>
-          Close
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+</svg>
         </button>
       {pinDetail && (
         <div className="flex flex-col w-full md:px-4">
           <div className='flex justify-between text-md md:text-xl p-2 w-full'>
-            <Link href={`/user-profile/${pinDetail?.postedBy?._id}`}>
+              <div className='flex flex-1 w-full gap-4'>
+              <Link href={`/user-profile/${pinDetail?.postedBy?._id}`}>
                 <a className='flex gap-2 '>
                 <img src={pinDetail?.postedBy?.image} className="w-10 h-10 md:w-12 md:h-12 object-cover rounded-full" alt="user-profile" />
                         <div>
@@ -174,39 +177,15 @@ const PinDetailsModal = (props) => {
                           <p className='text-[12px] md:text-sm'>{moreDetails?.postedBy?.followers? moreDetails.postedBy.followers.length:0} Followers</p>
                         </div>
           </a>
-                </Link>
-                <button className='p-2 rounded-box bg-stone-700 hover:bg-stone-600 text-[#fffffe] font-semibold text-lg' onClick={() => { followUser(pinDetail.postedBy._id, session?.user.id) }}>
+              </Link>
+                <div className='text-right md:text-left flex-1'>
+                <button className='btn btn-primary btn-outline font-bold' onClick={() => { followUser(pinDetail.postedBy._id, session?.user.id) }}>
                   {followSuccess?'Following':alreadyFollowed.length > 0 ? 'Following' : 'Follow'}
-                          </button>
+                </button>
+              </div>
             </div>
-            <div className='md:h-[65vh]'>
-          <img
-              className="mx-auto h-full object-cover"
-              src={(pinDetail?.image && urlFor(pinDetail?.image).url())}
-              alt="user-post"
-              />
-          </div>
-          <div className="w-full px-2 md:px-0 flex flex-col md:flex-row bg-[#0f0e17]">
-            <div className='border-b-2 pb-2 flex-1 md:mr-2'>
-                <div className='flex items-center'>
-                <h1 className='flex-1 mt-3 text-[#fffffe] text-3xl font-bold break-words'>
-                  {pinDetail.title}
-                </h1>
-                <a
-                href={`${pinDetail.image?.asset.url}?dl=`}
-                download
-                className="pt-6"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-</svg>
-              </a>
-                  </div>
-              <p className="mt-3 text-[#a7a9be] font-semibold text-md">{moreDetails?.about}</p>
-            </div>
-            
-            <div className='md:ml-2 pt-4 relative mx-auto btn-group md:pb-0'>
-                <button className='btn  p-2 hover:bg-red-500 text-lg' onClick={() => { likePin(pinDetail._id) }}>
+            <div className='hidden md:flex btn-group  relative'>
+                <button className='btn btn-outline p-2 px-3 border-2 hover:bg-red-500 text-lg' onClick={() => { likePin(pinDetail._id) }}>
                   <span className='mr-2'>
                     {pinDetail?.likes ? pinDetail.likes.length : 0}
                   </span>
@@ -218,16 +197,16 @@ const PinDetailsModal = (props) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>}
                 </button>
-                <button className='btn p-2 hover:bg-sky-500' onClick={() => { savePin(pinDetail._id) }}>
+                <button className='btn btn-outline p-2 px-3 border-2 hover:bg-sky-500' onClick={() => { savePin(pinDetail._id) }}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg><span className='ml-2'>{alreadySaved.length > 0 ? 'Saved' : 'Save'}</span>
                 </button>
-                <button className='btn p-2' onClick={collectionModal}>
+                <button className='btn btn-outline p-2 px-3 border-2 hover:bg-sky-600' onClick={collectionModal}>
                   Collection
                 </button>
                 {showCollectionModal &&
-                  <div className='w-72 p-2 absolute -bottom-10 right-0 bg-stone-900 border-2 rounded-xl'>
+                  <div className='w-72 p-2 absolute -bottom-[18rem] right-0 bg-stone-900 border-2 rounded-xl'>
                   <button className='bg-red-500 absolute -top-4 -left-4 p-1 border-4 rounded-full' onClick={() => setShowCollectionModal(false)}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" />
@@ -260,7 +239,98 @@ const PinDetailsModal = (props) => {
                         
                       </div>)}
                   </div>
-                </div>}
+                  </div>}
+                  <a
+                href={`${pinDetail.image?.asset.url}?dl=`}
+                download
+                className="btn btn-outline border-2 p-2 "
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+</svg>
+              </a>
+            </div>
+                
+            </div>
+            <div className='md:h-[65vh]'>
+          <img
+              className="mx-auto h-full object-cover"
+              src={(pinDetail?.image && urlFor(pinDetail?.image).url())}
+              alt="user-post"
+              />
+          </div>
+          <div className="w-full px-2 md:px-0 flex flex-col">
+            <div className='md:border-b-2 pb-2 text-center md:mr-2'>
+                <h1 className='flex-1 mt-2 text-[#fffffe] text-xl md:text-3xl font-bold break-words'>
+                  {pinDetail.title}
+                </h1>
+              <p className="mt-2 text-[#a7a9be] font-semibold text-sm md:text-md">{moreDetails?.about}</p>
+              </div>
+              <div className='flex block md:hidden btn-group mx-auto relative'>
+                <button className='btn btn-outline p-2 hover:bg-red-500 text-lg' onClick={() => { likePin(pinDetail._id) }}>
+                  <span className='mr-2'>
+                    {pinDetail?.likes ? pinDetail.likes.length : 0}
+                  </span>
+                  {alreadyLiked.length > 0 ? 
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg> : 
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>}
+                </button>
+                <button className='btn btn-outline p-2 hover:bg-sky-500' onClick={() => { savePin(pinDetail._id) }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg><span className='ml-2'>{alreadySaved.length > 0 ? 'Saved' : 'Save'}</span>
+                </button>
+                <button className='btn btn-outline p-2 hover:bg-sky-600' onClick={collectionModal}>
+                  Collection
+                </button>
+                {showCollectionModal &&
+                  <div className='w-72 p-2 absolute bottom-0 right-0 bg-stone-900 border-2 rounded-xl'>
+                  <button className='bg-red-500 absolute -top-4 -left-4 p-1 border-4 rounded-full' onClick={() => setShowCollectionModal(false)}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" />
+</svg>
+                  </button>
+                  <div className="dropdown w-full">
+                  <button tabIndex="0" className="btn btn-info w-full font-bold">Create New Collection</button>
+                  <form tabIndex="0" onSubmit={createCollection} className="py-2 w-full dropdown-content bg-base-700 rounded-box flex gap-2">
+                  <input type="text" ref={collectionInputRef} placeholder="collection name" className="input input-bordered bg-stone-900 w-full max-w-xs"/>
+                      <button className='btn btn-success font-bold'>Create</button>
+                  </form>
+                  </div>
+                  
+                  <div className='flex flex-col pt-2 px-4 gap-1 h-52 overflow-auto'>
+                    {collection?.map(item =>
+                      <div className='flex bg-stone-800 p-1' key={item.title}>
+                        <span className='flex-1 p-2 text-lg'>{item.title}</span>
+                        
+                    {item.pins?.filter(pin=>pin.item._id===pinDetail._id).length===1 ?
+                          <button
+                            onClick={()=>removePinFromCollection(item,pinDetail._id)}
+                            className='btn btn-error font-bold p-2 px-3'>
+                        Remove
+                      </button> :
+                      <button
+                        onClick={()=>{addPinToSelectedCollection(item,pinDetail._id)}}
+                        className='btn btn-success font-bold p-2 px-3'>
+                        Add
+                          </button>}
+                        
+                      </div>)}
+                  </div>
+                  </div>}
+                  <a
+                href={`${pinDetail.image?.asset.url}?dl=`}
+                download
+                className="btn btn-outline p-2 "
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+</svg>
+              </a>
             </div>
           </div>
         </div>

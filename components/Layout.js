@@ -15,7 +15,7 @@ export default function Layout({ children }) {
           exit="exit"
           variants={variants}
           transition={{ type: 'linear' }}
-          className='bg-[#0f0e17]'>
+          >
           {children}
         </motion.main>
   )

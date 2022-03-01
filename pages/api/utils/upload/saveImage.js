@@ -21,7 +21,8 @@ export default async function handler(req, res) {
           _ref: userId,
         },
         category,
-      };
+  };
+  
     const response = await client.create(doc);
     res.status(200).json({ message: "Success" });
 }

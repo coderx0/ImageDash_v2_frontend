@@ -39,22 +39,28 @@ const Navbar = () => {
          {authAlert && <div className="shadow-lg flex justify-around p-6 rounded-box absolute m-8 text-[20px] right-0 w-72 z-30 bg-red-500">
     <span>{authAlert}</span>
 </div>}
-        <div className="bg-stone-900 font-bold h-16 relative sticky top-0 z-20 text-3xl flex justify-between">
+        <div className="bg-stone-900 border-b-2 border-sky-500 font-bold h-16 relative sticky top-0 z-20 text-3xl flex justify-between">
        
-        <span className="pt-4 md:pt-3 pb-2 pl-2 text-lg md:text-3xl">
+        <span className="pt-4 md:pt-3 pb-2 pl-2 text-xl md:text-3xl">
             <Link href="/">IDash</Link>
           </span>
-          <form className="flex my-3 ml-6 relative" onSubmit={submitSearch}>
-            <input ref={searchInputRef} type="text" placeholder="search" className="rounded-box h-full outline-none focus:border-2 focus:border-sky-500 bg-slate-700 w-36 md:w-72 lg:w-96 pb-2 pl-4 pt-2 text-[18px]" />
-            <button className="h-full p-2 rounded-none">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 absolute top-2 right-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <form className="flex flex-1 my-3 ml-6 relative" onSubmit={submitSearch}>
+            <input ref={searchInputRef}
+              type="text"
+              placeholder="search for images"
+              className="rounded-xl h-full outline-none focus:border-2 focus:border-sky-500 bg-slate-700 w-full pb-2 pl-4 pt-2 text-[18px]" />
+            <button className="h-full bg-slate-700 absolute right-0 p-2 rounded-r-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
 </svg>
             </button>
           </form>
+          <span className="text-lg hidden md:block btn px-4 py-2 ml-2 my-2">
+          <Link href="/explore">Explore</Link>
+          </span>
            { userData && <div className="p-2 mx-2 relative dropdown dropdown-hover">
-              <div className="m-1" tabIndex="0">
-              <img src={userData.image} height="50px" width="50px" className="inline-block h-11 w-11 object-cover rounded-full border-2" alt="up" />
+              <div className="" tabIndex="0">
+              <img src={userData.image} className="inline-block h-9 w-9 md:h-11 md:w-11 object-cover rounded-full border-2" alt="up" />
               </div>
               <ul tabIndex="0" className="flex flex-col items-end p-4 text-[15px] dropdown-content bg-stone-800 rounded-box w-48 absolute top-15 right-0">
               <li className="flex w-full p-1 justify-around border-b-2"><img src={userData.image} alt={userData.userName} className="h-12 w-12 border-2 object-cover rounded-full inline-block"/>

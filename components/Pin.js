@@ -54,7 +54,7 @@ const Pin = ({ pin,setShowPinModal }) => {
   return (
       <>
       <div
-        className="md:mx-1 my-2 md:p-0 z-10 border-2 border-slate-700"
+        className="md:mx-1 my-4 md:p-0 z-10 border-2 border-slate-700"
         style={{
           backgroundColor: 'rgba(17, 25, 40, 0.15)',
         }}>
@@ -78,8 +78,8 @@ const Pin = ({ pin,setShowPinModal }) => {
                 initial={{ y: -50 }}
                 animate={{ y: 0 }}
                 transition={{duration:0.5}}
-                className="absolute font-semibold top-0 right-0 pr-4 p-1 rounded-box backdrop-blur-sm">
-            <img src={postedBy.image} className="ml-1 object-cover cursor-pointer rounded-full w-8 h-8 inline-block" onClick={()=>{router.push(`/user-profile/${postedBy._id}`)}}/>
+                className="absolute font-semibold top-0 right-0 pr-2 p-1 backdrop-blur-md">
+            <img src={postedBy.image} className="ml-1 object-cover cursor-pointer rounded-full w-4 h-4 md:w-8 md:h-8 inline-block" onClick={()=>{router.push(`/user-profile/${postedBy._id}`)}}/>
             <span className="ml-2 sm:text-sm md:text-md lg:text-lg cursor-pointer" onClick={()=>{router.push(`/user-profile/${postedBy._id}`)}}>
               {postedBy.userName}
             </span>
@@ -90,10 +90,11 @@ const Pin = ({ pin,setShowPinModal }) => {
               <motion.div
                 initial={{ y: -10 }}
                 animate={{ y: 0 }}
-                className="absolute top-0 p-2 flex justify-between">
+                className="absolute top-0 flex">
                 {alreadySaved?.length !== 0 ? (
                   <button type="button"
-                onClick={e=>e.stopPropagation()}    className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none">
+                    onClick={e => e.stopPropagation()}
+                    className="bg-red-500 opacity-70 hover:opacity-100 text-white font-semibold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none">
                    Saved
                 </button>
               ) : (
@@ -114,10 +115,10 @@ const Pin = ({ pin,setShowPinModal }) => {
         </div>
       
           <div className="bg-slate-900 flex justify-around items-center">
-          <h1 className="flex-1 pl-4 text-lg font-semibold">
+          <h1 className="flex-1 pl-2 text-[1rem] font-semibold">
             {title}
           </h1>
-          <span className="flex text-md w-16 justify-around p-2">
+          <span className="flex items-center justify-around text-lg w-12 py-2 mx-2">
             {pinLikes? pinLikes.length: pin?.likes?.length}
             {alreadyLiked.length > 0 &&
               <span>
@@ -142,7 +143,7 @@ const Pin = ({ pin,setShowPinModal }) => {
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              className="hover:animate-pulse p-2 rounded-box"
+              className="hover:animate-pulse"
                           >
                                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

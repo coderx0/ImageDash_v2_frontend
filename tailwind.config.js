@@ -11,10 +11,11 @@ module.exports = {
   ],
   daisyui: {
     styled: true,
-    themes: true,
+    themes: ['forest'],
     base: true,
     utils: true,
     logs: true,
     rtl: false,
+    darkTheme: "dark",
   },
 }

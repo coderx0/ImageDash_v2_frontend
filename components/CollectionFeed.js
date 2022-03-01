@@ -22,7 +22,7 @@ const CollectionFeed = ({ collections }) => {
               <div
                   className='bg-stone-900 my-4'
                           key={collection._id}>
-                          <Link href={`collectionDetails/${collection._id}`}>
+                          <Link href={`/collectionDetails/${collection._id}`}>
                               <a>
                               <div className='overflow-hidden'>
                               <img
@@ -32,19 +32,24 @@ const CollectionFeed = ({ collections }) => {
                               />
                           </div>
                   <div className='flex'>
-                      {collection.pins.map(pin =>
-                          <div className='border-2' key={pin._key}>
+                      {collection.pins.map((pin,idx) =>
+                          (idx<4 && <div className='border-2' key={pin._key}>
                           <img
                             src={pin.item.image.asset.url}
                             alt={pin.item.title}
                             className='object-cover h-full'
                               />
-                             </div>
+                             </div>)
                       )}
                           </div>
-                          <div className='font-bold flex p-2'>
+                          <div className='font-bold text-lg flex p-2'>
                               <h1 className='flex-1'>{collection.title}</h1>
-                            <span className='px-2'>{collection.pins.length}</span>
+                            <h1 className='px-2 flex items-center gap-2'>
+                            <span> {collection.pins.length}</span>
+                              <span><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+  <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+</svg></span>
+                            </h1>
                           </div>
                               </a>
                     </Link>

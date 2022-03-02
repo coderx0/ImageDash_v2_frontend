@@ -31,8 +31,8 @@ const PinDetailsModal = (props) => {
 
   useEffect(() => {
     if (pinDetail._id) {
-      // const element = document.getElementById("pinModal");
-      // element.scrollTo(0, 0);
+      const element = document.getElementById("pinModal");
+      element.scrollTo(0, 0);
       
         fetch(`/api/data/pinDetails/${pinDetail._id}`).then(response => response.json()).then(data => {
             setPins(data.morePins);
@@ -336,8 +336,8 @@ const PinDetailsModal = (props) => {
         </div>
         )}
         
-        <div className='flex py-2 px-4 flex-col md:flex-row'>
-          <div className='md:w-[40%] pr-4'>
+        <div className='flex py-2 px-1 md:px-4 w-full flex-col md:flex-row'>
+          <div className='md:w-[40%] md:pr-4'>
           <h2 className="mt-5 text-2xl font-bold">Comments</h2>
             <div className="max-h-[220px] overflow-y-auto">
               {moreDetails?.comments?.map((item) => (
@@ -355,22 +355,23 @@ const PinDetailsModal = (props) => {
                 </div>
               ))}
             </div>
-            <div className="flex flex-wrap mt-6 gap-3">
-              <div className='flex gap-1'>
-              <Link href={`/user-profile/${session?.user.id}`}>
-                <img src={session?.user.image} className="w-10 h-10 rounded-full object-cover cursor-pointer" alt="user-profile" />
+            <div className="flex mt-6 w-full">
+            <Link href={`/user-profile/${session?.user.id}`}>
+                  <img
+                    src={session?.user.image}
+                    className="w-8 h-8 my-1 md:w-10 md:h-10 rounded-full object-cover cursor-pointer"
+                    alt="user-profile" />
               </Link>
               <input
-                className="flex-1 text-md bg-stone-700 outline-none border-2 p-2 text-white rounded-lg focus:border-sky-300"
+                className="flex-1 input input-bordered"
                 type="text"
                 placeholder="Add a comment"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-              />
-             </div>
-              <button
+                />
+             <button
                 type="button"
-                className="bg-yellow-500 p-2 rounded-lg text-stone-700 font-bold"
+                className="mx-1 btn btn-success font-bold"
                 onClick={addComment}
               >
                 {addingComment ? 'Doing...' : 'Done'}
@@ -384,7 +385,7 @@ const PinDetailsModal = (props) => {
         </h2>
       )}
               {pins ? (    
-               <Masonry className="pl-2 flex" breakpointCols={breakPointObj}>
+               <Masonry className="pl-2 flex gap-2 lg:gap-0" breakpointCols={breakPointObj}>
             {pins?.map(pin => <Pin key={pin._id} pin={pin} setShowPinModal={setShowPinModal}/>)}
             </Masonry>
       ) : (

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { MdDelete } from 'react-icons/md';
-import { categories } from '../lib/Data';
+// import { categories } from '../lib/Data';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import { motion } from 'framer-motion';
 import Layout from '../components/Layout';
+import { cdnClient } from '../lib/sanityClient';
+import { availableCategories } from '../lib/Data';
 
-const CreatePin = ({ user }) => {
+const CreatePin = ({ user,categories }) => {
   const [title, setTitle] = useState('');
   const [about, setAbout] = useState('');
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,6 @@ const CreatePin = ({ user }) => {
 
   const uploadImage = async (e) => {
     const selectedFile = e.target.files[0];
-    console.log(selectedFile);
     const formData = new FormData();
     formData.append(e.target.name,selectedFile);
 
@@ -38,15 +38,6 @@ const CreatePin = ({ user }) => {
      
       setImageAsset(response.data);
       setLoading(false);
-      // client.assets
-      //   .upload('image', selectedFile, { contentType: selectedFile.type, filename: selectedFile.name })
-      //   .then((document) => {
-      //     setImageAsset(document);
-      //     setLoading(false);
-      //   })
-      //   .catch((error) => {
-      //     console.log('Upload failed:', error.message);
-      //   });
     } else {
       setLoading(false);
       setWrongImageType(true);
@@ -65,28 +56,6 @@ const CreatePin = ({ user }) => {
       }
       );
       router.push('/');
-      // const doc = {
-      //   _type: 'pin',
-      //   title,
-      //   about,
-      //   destination,
-      //   image: {
-      //     _type: 'image',
-      //     asset: {
-      //       _type: 'reference',
-      //       _ref: imageAsset?._id,
-      //     },
-      //   },
-      //   userId: session.user.id,
-      //   postedBy: {
-      //     _type: 'postedBy',
-      //     _ref: session.user.id,
-      //   },
-      //   category,
-      // };
-      // client.create(doc).then(() => {
-      //   router.push('/');
-      // });
     } else {
       setFields(true);
 
@@ -171,7 +140,7 @@ const CreatePin = ({ user }) => {
             <div className="flex gap-2 mt-2 mb-2 text-lg  bg-[black] p-2 items-center rounded-lg ">
               <img
                 src={session?.user?.image}
-                className="w-10 h-10 rounded-full"
+                className="w-10 h-10 rounded-full object-cover"
                 alt="user-profile"
               />
               <p className="font-bold">{session?.user?.name}</p>
@@ -202,9 +171,12 @@ const CreatePin = ({ user }) => {
                 className="outline-none p-2 bg-stone-700 rounded-md cursor-pointer"
               >
                 <option value="others" className="sm:text-bg bg-stone-700">Select Category</option>
-                {categories.map((item) => (
-                  <option className=" border-0 text-white outline-none capitalize bg-stone-900" key={item.name} value={item.name}>
-                    {item.name}
+                {categories.map((category) => (
+                  <option
+                    className=" border-0 text-white outline-none capitalize bg-stone-900"
+                    key={category._id}
+                    value={`${category._id},${category.title}`}>
+                    {category.title}
                   </option>
                 ))}
               </select>
@@ -227,3 +199,13 @@ const CreatePin = ({ user }) => {
 };
 
 export default CreatePin;
+
+export async function getStaticProps() {
+  const categories = await cdnClient.fetch(availableCategories);
+
+  return {
+    props: {
+      categories
+    }
+  }
+}

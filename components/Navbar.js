@@ -39,26 +39,26 @@ const Navbar = () => {
          {authAlert && <div className="shadow-lg flex justify-around p-6 rounded-box absolute m-8 text-[20px] right-0 w-72 z-30 bg-red-500">
     <span>{authAlert}</span>
 </div>}
-        <div className="bg-stone-900 border-b-2 border-sky-500 font-bold h-16 relative sticky top-0 z-20 text-3xl flex justify-between">
+        <div className="bg-stone-900 border-b-2 border-sky-500 font-bold h-16 relative sticky top-0 z-20 text-3xl flex justify-between items-center gap-2">
        
-        <span className="pt-4 md:pt-3 pb-2 pl-2 text-xl md:text-3xl">
+        <span className="px-1 md:px-2 text-xl md:text-3xl">
             <Link href="/">IDash</Link>
           </span>
-          <form className="flex flex-1 my-3 ml-6 relative" onSubmit={submitSearch}>
+          <form className="flex flex-1 relative" onSubmit={submitSearch}>
             <input ref={searchInputRef}
               type="text"
               placeholder="search for images"
-              className="rounded-xl h-full outline-none focus:border-2 focus:border-sky-500 bg-slate-700 w-full pb-2 pl-4 pt-2 text-[18px]" />
-            <button className="h-full bg-slate-700 absolute right-0 p-2 rounded-r-xl">
+              className="rounded-lg h-10 outline-none bg-slate-700 w-full pb-2 pl-4 pt-2 text-[18px]" />
+            <button className="h-full bg-slate-700 absolute right-0 p-2 rounded-lg">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
 </svg>
             </button>
           </form>
-          <span className="text-lg hidden md:block btn px-4 py-2 ml-2 my-2">
+          <button className="btn px-1">
           <Link href="/explore">Explore</Link>
-          </span>
-           { userData && <div className="p-2 mx-2 relative dropdown dropdown-hover">
+          </button>
+           { userData && <div className="mx-1 relative dropdown dropdown-hover">
               <div className="" tabIndex="0">
               <img src={userData.image} className="inline-block h-9 w-9 md:h-11 md:w-11 object-cover rounded-full border-2" alt="up" />
               </div>
@@ -74,7 +74,8 @@ const Navbar = () => {
             </ul>
           </div>}
           {
-            !userData && <span className="btn  m-2"><Link href="/authentication">Login</Link></span>
+            !userData && <button className="btn">
+              <Link href="/authentication">Login</Link></button>
           }
         </div>
         <div className="fixed rounded-full hover:animate-pulse bg-blue-100 text-gray-900 bottom-0 right-0 w-12 md:w-16 h-12 md:h-16 z-10 flex justify-center items-center m-8">

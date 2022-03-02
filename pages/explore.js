@@ -13,8 +13,6 @@ const breakPointObj = {
 }
 
 const Explore = ({ collections, categoryData }) => {
-    console.log(categoryData);
-
   return (
       <Layout>
           <div>
@@ -23,10 +21,10 @@ const Explore = ({ collections, categoryData }) => {
                   className="mx-2 md:mx-6 mt-2">
                       <h1 className='text-xl font-bold'>{category.title}</h1>
                       <Masonry
-                className="px-2 md:px-4 pt-8 flex gap-2"
+                className="px-2 md:px-4 pt-8 flex gap-4"
                           breakpointCols={breakPointObj}>
                           {category.pins.map(pin => (
-                              <div key={pin._key}>
+                              <div key={pin._key} className='my-2 md:my-0'>
                                   <img
                                       src={pin.item.image.asset.url}
                                       alt={pin.item.title}/>

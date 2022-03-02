@@ -26,21 +26,16 @@ const Feed = ({pins}) => {
                 breakpointCols={breakPointObj}>
                 {pins?.map(pin => <Pin key={pin._id} pin={pin} setShowPinModal={setShowPinModal}/>)}
             </Masonry>
-            <AnimatePresence exitBeforeEnter>
             {
                 showPinModal &&
                
-                        <motion.div
-                            key={"pinModal"}
-                        initial={{ opacity:0,x:200,position:"fixed",top:0,left:0,right:0,bottom:0 }}
-                        animate={{ opacity:1,x: 0 }}
-                        exit={{ opacity:0,y: 200,position:"fixed",top:0,left:0,right:0,bottom:0 }}
-                        transition={{ type: 'linear' }}                    
+                        <div
+                            key={"pinModal"}                  
                         >
                 <PinDetailsModal session={session}  pinDetail={showPinModal} setShowPinModal={setShowPinModal} />
-                </motion.div>
+                </div>
             }
-            </AnimatePresence>
+            
         </>
   );
 };

@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         _key: pinId+'pin',
         userId: uId,
         item: {
-            _type: 'collectionItem',
+            _type: 'reference',
             _ref: pinId
         }
     }])

@@ -24,11 +24,13 @@
     "next-auth": "^4.1.2",
     "next-connect": "^0.12.1",
     "react": "17.0.2",
+    "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "17.0.2",
     "react-google-login": "^5.2.2",
     "react-icons": "^4.3.1",
     "react-loader-spinner": "^5.1.0",
     "react-masonry-css": "^1.0.16",
+    "react-share": "^4.4.0",
     "swr": "^1.2.0",
     "uuid": "^8.3.2"
   },

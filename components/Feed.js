@@ -24,7 +24,10 @@ const Feed = ({pins}) => {
                 className="px-2 md:px-4 pt-8 flex gap-2"
                 columnClassName="bg-clip-padding"
                 breakpointCols={breakPointObj}>
-                {pins?.map(pin => <Pin key={pin._id} pin={pin} setShowPinModal={setShowPinModal}/>)}
+                {pins?.map(pin => <Pin
+                    key={pin._key?pin._key:pin._id}
+                    pin={pin._key?pin.item:pin}
+                    setShowPinModal={setShowPinModal} />)}
             </Masonry>
             {
                 showPinModal &&

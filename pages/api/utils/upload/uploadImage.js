@@ -1,7 +1,4 @@
-import nextConnect from 'next-connect';
-import multer from 'multer';
 import { client } from '../../../../lib/sanityClient';
-import multiparty from 'multiparty'
 import formidable from 'formidable';
 import { createReadStream } from "fs";
 

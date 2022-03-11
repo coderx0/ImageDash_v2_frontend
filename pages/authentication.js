@@ -31,7 +31,6 @@ const Auth = () => {
         
         if (isLogin) {
             setLoading(true);
-            localStorage.setItem('new_user', 0);
 
             const result = await signIn('credentials', {
                 redirect: false,
@@ -82,7 +81,7 @@ const Auth = () => {
                 return;
         }
 
-            if (response.ok)
+            if (data.successMessage)
             {
                 setAuthAlert({type:"success",message: data.successMessage});
                 setLoading(false);
@@ -90,14 +89,9 @@ const Auth = () => {
                     redirect: false,
                     email: enteredEmail,
                     password: enteredPassword,
-                    userName: enteredUserName,
-                    id:data.id,
-                    type:'new_user',
                 });
-                
                 if (result.ok)
                 {
-                    localStorage.clear();
                     setLoading(false);
                     router.replace("/");
                 } 

@@ -25,7 +25,11 @@ export default async function handler(req, res) {
                         .setIfMissing({ following: [] })
                         .insert('after', 'following[-1]', [{
                         _key: nanoid(),
-                        userId: uploaderId,
+                            userId: uploaderId,
+                            following: {
+                                _type: 'postedBy',
+                                _ref: uploaderId,
+                            },
                         }])
                         .commit()
     

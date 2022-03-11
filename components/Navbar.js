@@ -2,6 +2,7 @@ import {React, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import { FaCompass } from "react-icons/fa";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -55,10 +56,14 @@ const Navbar = () => {
 </svg>
             </button>
           </form>
-          <button className="btn px-1">
-          <Link href="/explore">Explore</Link>
+          <Link href="/explore">
+          <button className="btn px-1 text-3xl rounded-full">
+              <FaCompass/>
           </button>
-           { userData && <div className="mx-1 relative dropdown dropdown-hover">
+          </Link>
+
+          {userData &&
+            <div className="mx-1 relative dropdown dropdown-hover">
               <div className="" tabIndex="0">
               <img src={userData.image} className="inline-block h-9 w-9 md:h-11 md:w-11 object-cover rounded-full border-2" alt="up" />
               </div>
@@ -73,6 +78,8 @@ const Navbar = () => {
               </li> 
             </ul>
           </div>}
+
+
           {
             !userData && <button className="btn">
               <Link href="/authentication">Login</Link></button>
@@ -97,3 +104,21 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
+
+// userData && <div className="mx-1 relative dropdown dropdown-hover">
+//               <div className="" tabIndex="0">
+//               <img src={userData.image} className="inline-block h-9 w-9 md:h-11 md:w-11 object-cover rounded-full border-2" alt="up" />
+//               </div>
+//               <ul tabIndex="0" className="flex flex-col items-end p-4 text-[15px] dropdown-content bg-stone-800 rounded-box w-48 absolute top-15 right-0">
+//               <li className="flex w-full p-1 justify-around border-b-2"><img src={userData.image} alt={userData.userName} className="h-12 w-12 border-2 object-cover rounded-full inline-block"/>
+//                 <h1 className="text-lg p-2">{userData.userName}</h1></li>
+//               <li className="hover:bg-stone-700 w-full text-right mt-2 pr-4 rounded-box">
+//               <Link href={`/user-profile/${session?.user?.id}`}>Profile</Link>      
+//               </li> 
+//               <li className="hover:bg-red-500 w-full text-right mt-2 pr-4 rounded-box cursor-pointer" onClick={() => { setUserData(null);return signOut({redirect:false})}}>
+//                 Logout
+//               </li> 
+//             </ul>
+//           </div>

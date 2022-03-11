@@ -1,5 +1,6 @@
 import { hashPassword } from '../../../lib/auth';
 import { ConnectToDatabase } from '../../../lib/db';
+import { client } from "../../../lib/sanityClient";
 
 async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -25,55 +26,58 @@ async function handler(req, res) {
     return;
   }
 
-  let client;
+  // let client;
 
-  try {
-    client = await ConnectToDatabase();
-  } catch (error) {
-    res.status(422).json({
-      errorMessage:
-        'Could not connect to database',
-    });
-  }
+  // try {
+  //   client = await ConnectToDatabase();
+  // } catch (error) {
+  //   res.status(422).json({
+  //     errorMessage:
+  //       'Could not connect to database',
+  //   });
+  // }
 
-  const db = client.db();
+  // const db = client.db();
 
-  let existingUser;
+  // let existingUser;
 
-  try {
-    existingUser = await db.collection('users').findOne({ '$or':[{email: email},{userName:userName}] });
-  } catch (error) {
-    res.status(422).json({
-      errorMessage:
-        'something wrong happened. Try again later!',
-    });
-  }
+  // try {
+  //   existingUser = await db.collection('users').findOne({ '$or':[{email: email},{userName:userName}] });
+  // } catch (error) {
+  //   res.status(422).json({
+  //     errorMessage:
+  //       'something wrong happened. Try again later!',
+  //   });
+  // }
+  const mailQuery = `*[_type == "user" && email == '${email}']{
+    email,
+  }`;
+  const mailData = await client.fetch(mailQuery);
   
-
-  if (existingUser) {
-    res.status(422).json({ errorMessage: 'User exists already!' });
-    client.close();
-    return;
+  if (mailData.length > 0) {
+    res.status(200).json({ errorMessage: "account with provided email already exists." });
   }
 
-  const hashedPassword = await hashPassword(password);
-
-  let result;
-
-  try {
-    result = await db.collection('users').insertOne({
-      email: email,
-      password: hashedPassword,
-      userName:userName
-    });
-  } catch (error) {
-    res.status(422).json({ errorMessage: 'Could not sign you up.' });
-    client.close();
-    return;
+  else {
+    const userNameQuery = `*[_type == "user" && userName == '${userName}']{
+      email,
+    }`;
+      const userData = await client.fetch(userNameQuery);
+    if (userData.length > 0) {
+      res.status(200).json({ errorMessage: "username already exists." });
+    } else {
+      // const hashedPassword = await hashPassword(password);
+      const doc = {
+        _type: 'user',
+        userName: userName,
+        email: email,
+        password: password,
+        image:'https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-man-default-avatar-png-image_2813122.jpg'
+      };
+      const response = await client.create(doc);
+      res.status(200).json({ successMessage: "Account created successfully" });
+     }
   }
-
-  res.status(201).json({ successMessage: 'Account created successfully. Logging you in',id:`${result.insertedId}`});
-  client.close();
 }
 
 export default handler;

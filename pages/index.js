@@ -1,9 +1,7 @@
 import { client,cdnClient } from "../lib/sanityClient";
 import { feedQuery } from "../lib/Data";
 import Feed from "../components/Feed";
-import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { nanoid } from "nanoid";
 import { categories } from "../lib/Data";
 import { useRouter } from "next/router";
 import TopPins from "../components/TopPins";
@@ -13,23 +11,6 @@ export default function Home({ pins,topPins,collections }) {
 
   const { data: session, status } = useSession();
   const router = useRouter();
-  const user = session?.user;
-  
-  useEffect(() => {
-    const newUser = localStorage.getItem('new_user');
-
-    if (newUser === '1' && user) {
-      const doc = {
-        _id:nanoid(),
-        _type:'user',
-        userName: user.name,
-        image: user.image,
-        email: user.email,
-      };
-      
-    client.createIfNotExists(doc).then(msg=>console.log(msg));
-    }
-  }, [user?.id]);
   
   const searchCategory = (searchTerm) => {
     router.push(`/search/${searchTerm}`);

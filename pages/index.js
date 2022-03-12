@@ -1,10 +1,10 @@
-import { client,cdnClient } from "../lib/sanityClient";
+import { cdnClient } from "../lib/sanityClient";
 import { feedQuery } from "../lib/Data";
 import Feed from "../components/Feed";
 import { useSession } from "next-auth/react";
 import { categories } from "../lib/Data";
 import { useRouter } from "next/router";
-import TopPins from "../components/TopPins";
+// import TopPins from "../components/TopPins";
 import Image from "next/image";
 
 export default function Home({ pins,topPins,collections }) { 
@@ -42,10 +42,10 @@ export default function Home({ pins,topPins,collections }) {
       </div>)}
       </div>
       <div>
-        <div>
+        {/* <div>
         <h1 className='text-center font-semibold text-xl my-4'>Top Pins</h1>
         <TopPins topPins={topPins}/>
-        </div>
+        </div> */}
       <h1 className="pt-2 text-center font-bold text-2xl">Pins</h1>
         <Feed pins={pins} />
       </div>
@@ -56,12 +56,11 @@ export default function Home({ pins,topPins,collections }) {
 export async function getStaticProps() {
     
   const data = await cdnClient.fetch(feedQuery);
-  const topPins = data.filter(pin => pin.likes !== null).sort((a, b) => b.likes.length - a.likes.length).slice(0,3);
+  // const topPins = data.filter(pin => pin.likes !== null).sort((a, b) => b.likes.length - a.likes.length).slice(0,3);
 
   return {
       props: {
       pins: data,
-      topPins,
       },
       revalidate: 3600
   }

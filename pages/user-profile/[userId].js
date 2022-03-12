@@ -11,6 +11,7 @@ import CollectionFeed from '../../components/CollectionFeed';
 import Image from 'next/image';
 import ImageUploader from '../../components/ImageUploader';
 import axios from 'axios';
+import FollowUser from '../../components/FollowUser';
 
 const breakPointObj = {
   default: 4,
@@ -28,11 +29,16 @@ const UserProfile = ({user}) => {
   const [text, setText] = useState('images');
   const [activeBtn, setActiveBtn] = useState('images');
   const [uploadCount, setUploadCount] = useState(0);
-  const [followSuccess, setFollowSuccess] = useState(false);
+  // const [followSuccess, setFollowSuccess] = useState(false);
   const [followers, setFollowers] = useState([]);
   const [collections, setCollections] = useState([]);
   const [imageAsset, setImageAsset] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  // const [userFollowers, setUserFollowers] = useState(user.followers);
+
   const userNameRef = useRef();
+  const aboutRef = useRef();
+
   const router = useRouter();
 
   const { userId } = router.query;
@@ -89,7 +95,15 @@ const UserProfile = ({user}) => {
   
     console.log(response.data.message);
   };
+  const updateAbout = async() => {
+    const about = aboutRef.current.value;
+    const response = await axios.post('/api/user-profile/updateAbout', {
+      userId: session.user.id,
+      about
+    });
   
+    console.log(response.data.message);
+  };
   const updateProfilePic = async () => {
     if (imageAsset)
     {
@@ -101,21 +115,7 @@ const UserProfile = ({user}) => {
     }  
   };
 
-  let alreadyFollowed = user.followers?.filter((item) => item?.userId === session?.user?.id);
-  alreadyFollowed = alreadyFollowed?.length > 0 ? alreadyFollowed : [];
-
- 
-  const followUser = (id,userId) => {
-    if (alreadyFollowed?.length === 0 && user._id !== session?.user.id) {
-
-      fetch(`/api/utils/follow/${id}/${userId}`).then(response => response.json()).then(data => {
-        if (data.message === "success") {
-          setFollowSuccess(true);
-        }
-      });
-      
-    }
-  }
+  const showOption = session ? session.user.id === userId ? true : false : false;
 
   if (!user) return <h1>Loading Profile</h1>;
 
@@ -141,11 +141,11 @@ const UserProfile = ({user}) => {
                     {user.userName}
                   </h1>
                  
-            <p className='text-[12px] md:text-sm'>Just Wandering about here and there</p>
+                  <p className='text-[12px] md:text-sm'>{user.about}</p>
             </div>
             </div>
-            <button className='btn btn-sm md:btn-md mt-2 text-[12px]' onClick={() => { followUser(user._id,session.user.id);}}>{alreadyFollowed.length>0?'Following':'Follow'}</button>
-          </div>
+              <FollowUser userFollowers ={user.followers} id={user._id} userId={session?.user.id}/>
+            </div>
           
           <div className="absolute top-0 z-1 right-0 p-2">
             {userId === session?.user?.id && (
@@ -170,7 +170,7 @@ const UserProfile = ({user}) => {
           >
            {uploadCount} Images
           </button>
-          {userId === session?.user.id && <button
+          { showOption && <button
             type="button"
             onClick={(e) => {
               setText('saved');
@@ -196,7 +196,7 @@ const UserProfile = ({user}) => {
               className={`${activeBtn === 'followers' ? activeBtnStyles : notActiveBtnStyles}`}>
               {user?.followers ? user.followers.length : 0} Followers
           </button>
-            {userId === session?.user.id &&  <button
+            { showOption &&  <button
                onClick={(e) => {
               setText('following');
               setActiveBtn('following');
@@ -204,7 +204,7 @@ const UserProfile = ({user}) => {
               className={`${activeBtn === 'following' ? activeBtnStyles : notActiveBtnStyles}`}>
               {user?.following ? user.following.length : 0} Following
             </button>}
-            {userId === session?.user.id && <button
+            { showOption && <button
                onClick={(e) => {
               setText('settings');
               setActiveBtn('settings');
@@ -315,8 +315,8 @@ const UserProfile = ({user}) => {
                 <h1>Change About</h1>
                 </label>
                 <div className='flex'>
-                <input id='about' type='text' placeholder = 'Enter about yourself' className='input input-bordered flex-1 '/>
-                 <button className='btn btn-info mx-2'>Change</button>
+                <input ref={aboutRef} id='about' type='text' placeholder = 'Enter about yourself' className='input input-bordered flex-1 '/>
+                 <button onClick={updateAbout} className='btn btn-info mx-2'>Change</button>
                 </div>
               </div>
               <div className='pt-1 mx-auto'>
@@ -341,7 +341,22 @@ export default UserProfile;
 
 export async function getServerSideProps(context) {
   const { userId } = context?.params;
-  const query = userQuery(userId);
+  const query = `*[_type == "user" && _id == '${userId}']{
+    _id,
+    userName,
+    about,
+    image,
+    followers[]{
+      followedBy->{
+        _id
+      }
+    },
+    following[]{
+      following->{
+        _id,
+      }
+    }
+  }`;
 
   const data = await client.fetch(query);
   return {
@@ -350,18 +365,3 @@ export async function getServerSideProps(context) {
     }
   }
 }
-
-
-
-{/* <a className='bg-stone-800 w-[22rem] sm:w-[15rem] h-[7rem] flex gap-2 rounded-lg items-center'>
-<div className='bg-red-100 h-full w-[35%] rounded-lg'>
-<img src={follower.followedBy.image}
-  alt={follower.followedBy.userName}
-  className="h-full w-full object-cover rounded-lg "
-/>
-</div>
-<div className='h-full w-[65%] flex flex-col'>
-  <h1 className='flex-1 text-center p-4 text-2xl font-bold'>{follower.followedBy.userName}</h1>
-  <button className='btn btn-info w-full'>View Profile</button>
-</div>
-</a> */}

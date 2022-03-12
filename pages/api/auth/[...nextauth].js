@@ -59,11 +59,11 @@ export default NextAuth({
             throw new Error('Invalid Email address!');
           }
   
-        //   const isValid = await verifyPassword(
-        //     credentials.password,
-        //     user.password
-        //   );
-          const isValid = credentials.password === userData[0].password;
+          const isValid = await verifyPassword(
+            credentials.password,
+            userData[0].password
+          );
+          // const isValid = credentials.password === userData[0].password;
   
           if (!isValid) {
             throw new Error('Wrong Password!');

@@ -3,6 +3,8 @@ import { urlFor } from '../lib/sanityClient';
 import Masonry from "react-masonry-css";
 import Link from 'next/link';
 import Pin from './Pin';
+import CollectionCreation from "./CollectionCreation";
+import FollowUser from "./FollowUser";
 
 const breakPointObj = {
   default: 2,
@@ -19,7 +21,6 @@ const PinDetailsModal = (props) => {
   const collectionInputRef = useRef();
   const [pins, setPins] = useState(null);
   const [moreDetails, setMoreDetails] = useState(null);
-  const [showCollectionModal, setShowCollectionModal] = useState(false);
   const [comment, setComment] = useState('');
   const [addingComment, setAddingComment] = useState(false);
   const [likingPost, setLikingPost] = useState(false);
@@ -27,7 +28,6 @@ const PinDetailsModal = (props) => {
   const [pinSaves, setPinSaves] = useState(null);
   const [pinLikes, setPinLikes] = useState(null);
   const [followSuccess, setFollowSuccess] = useState(false);
-  const [collection, setCollection] = useState(null);
 
   useEffect(() => {
     if (pinDetail._id) {
@@ -80,84 +80,17 @@ const PinDetailsModal = (props) => {
     }
   };
 
-  let alreadyFollowed = moreDetails?.postedBy?.followers?.filter((item) => item?.followedBy?._id === session?.user?.id);
-  alreadyFollowed = alreadyFollowed?.length > 0 ? alreadyFollowed : [];
-
-  const followUser = (id,userId) => {
-    if (alreadyFollowed?.length === 0 && session) {
-
-      fetch(`/api/utils/follow/${id}/${userId}`).then(response => response.json()).then(data => {
-        if (data.message === "success") {
-          setFollowSuccess(true);
-        }
-      });
-      
-    }
-  }
-
   const closeModal = (e) => {
       if (e.target.id === "pinBackdrop") {
           setShowPinModal(null);
       }
   }
 
-  const collectionModal = async() => {
-    const response = await fetch(`/api/utils/collection/${session?.user.id}`);
-    const data = await response.json();
-    setCollection(data?.collectionData);
-    setShowCollectionModal(true);
-    console.log(data.collectionData);
-  }
-  
-  const createCollection = async (event) => {
-    event.preventDefault();
-    const collectionName = collectionInputRef.current.value;
-    const response = await fetch(`/api/utils/collection/create/${session?.user.id}/${collectionName}`);
-    const data = await response.json();
-    const createdId = data?.collectionData._id;
-    const title = data?.collectionData.title;
-
-    setCollection(prev=>[{_id:createdId,title,pins:null},...prev]);
-  }
-
-  const addPinToSelectedCollection = async (collectionItem, pinId) => {
-    const response = await fetch(`/api/utils/collection/addPin`, {
-      method: "POST",
-      body: JSON.stringify({
-        collectionItem,
-        pinId,
-        uId: session?.user.id
-      }),
-      headers: { "Content-Type": 'application/json' }
-    });
-    const data = await response.json();
-    if (data) {
-      console.log("added to collection " + collectionItem.title);
-      setShowCollectionModal(false);
-    }
-  };
-  
-  const removePinFromCollection = async (collectionItem, pinId) => {
-    const response = await fetch(`/api/utils/collection/removePin`, {
-      method: "POST",
-      body: JSON.stringify({
-        collectionItem,
-        pinId,
-        uId: session?.user.id
-      }),
-      headers: { "Content-Type": 'application/json' }
-    });
-    const data = await response.json();
-    if (data) {
-      console.log("removed from collection " + collectionItem.title);
-    }
-  };
-
   return (
       <div className='fixed z-10 top-0 left-0 right-0 bottom-0 backdrop-blur-md' id="pinBackdrop" onClick={closeModal}>
       <div
         id="pinModal"
-      className="bg-base-100 mt-16 md:mt-16 h-[92vh] md:h-[90vh] overflow-x-hidden overflow-y-auto md:mx-8 xl:mx-24">
+      className="bg-base-100 mt-16 md:mt-16 h-[92vh] md:h-[90vh] overflow-x-hidden overflow-y-auto md:mx-6 xl:mx-24">
         <button
           onClick={()=>setShowPinModal(null)}
           className='z-10 sticky top-0 md:hidden btn btn-error rounded-none mb-1 w-full text-lg font-bold'>
@@ -179,9 +112,9 @@ const PinDetailsModal = (props) => {
           </a>
               </Link>
                 <div className='text-right md:text-left flex-1'>
-                <button className='btn btn-primary btn-outline font-bold' onClick={() => { followUser(pinDetail.postedBy._id, session?.user.id) }}>
-                  {followSuccess?'Following':alreadyFollowed.length > 0 ? 'Following' : 'Follow'}
-                </button>
+                  {moreDetails &&
+                    <FollowUser userFollowers={moreDetails.postedBy.followers} id={pinDetail.postedBy._id} userId={session?.user.id}/>
+                  }
               </div>
             </div>
             <div className='hidden md:flex btn-group  relative'>
@@ -202,44 +135,7 @@ const PinDetailsModal = (props) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg><span className='ml-2'>{alreadySaved.length > 0 ? 'Saved' : 'Save'}</span>
                 </button>
-                <button className='btn btn-outline p-2 px-3 border-2 hover:bg-sky-600' onClick={collectionModal}>
-                  Collection
-                </button>
-                {showCollectionModal &&
-                  <div className='w-72 p-2 absolute -bottom-[18rem] right-0 bg-stone-900 border-2 rounded-xl'>
-                  <button className='bg-red-500 absolute -top-4 -left-4 p-1 border-4 rounded-full' onClick={() => setShowCollectionModal(false)}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" />
-</svg>
-                  </button>
-                  <div className="dropdown w-full">
-                  <button tabIndex="0" className="btn btn-info w-full font-bold">Create New Collection</button>
-                  <form tabIndex="0" onSubmit={createCollection} className="py-2 w-full dropdown-content bg-base-700 rounded-box flex gap-2">
-                  <input type="text" ref={collectionInputRef} placeholder="collection name" className="input input-bordered bg-stone-900 w-full max-w-xs"/>
-                      <button className='btn btn-success font-bold'>Create</button>
-                  </form>
-                  </div>
-                  
-                  <div className='flex flex-col pt-2 px-4 gap-1 h-52 overflow-auto'>
-                    {collection?.map(item =>
-                      <div className='flex bg-stone-800 p-1' key={item.title}>
-                        <span className='flex-1 p-2 text-lg'>{item.title}</span>
-                        
-                    {item.pins?.filter(pin=>pin.item._id===pinDetail._id).length===1 ?
-                          <button
-                            onClick={()=>removePinFromCollection(item,pinDetail._id)}
-                            className='btn btn-error font-bold p-2 px-3'>
-                        Remove
-                      </button> :
-                      <button
-                        onClick={()=>{addPinToSelectedCollection(item,pinDetail._id)}}
-                        className='btn btn-success font-bold p-2 px-3'>
-                        Add
-                          </button>}
-                        
-                      </div>)}
-                  </div>
-                  </div>}
+             <CollectionCreation userId = {session?.user.id} pinId = {pinDetail._id}/>
                   <a
                 href={`${pinDetail.image?.asset.url}?dl=`}
                 download
@@ -284,44 +180,7 @@ const PinDetailsModal = (props) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg><span className='ml-2'>{alreadySaved.length > 0 ? 'Saved' : 'Save'}</span>
                 </button>
-                <button className='btn btn-outline p-2 hover:bg-sky-600' onClick={collectionModal}>
-                  Collection
-                </button>
-                {showCollectionModal &&
-                  <div className='w-72 p-2 absolute bottom-0 right-0 bg-stone-900 border-2 rounded-xl'>
-                  <button className='bg-red-500 absolute -top-4 -left-4 p-1 border-4 rounded-full' onClick={() => setShowCollectionModal(false)}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" />
-</svg>
-                  </button>
-                  <div className="dropdown w-full">
-                  <button tabIndex="0" className="btn btn-info w-full font-bold">Create New Collection</button>
-                  <form tabIndex="0" onSubmit={createCollection} className="py-2 w-full dropdown-content bg-base-700 rounded-box flex gap-2">
-                  <input type="text" ref={collectionInputRef} placeholder="collection name" className="input input-bordered bg-stone-900 w-full max-w-xs"/>
-                      <button className='btn btn-success font-bold'>Create</button>
-                  </form>
-                  </div>
-                  
-                  <div className='flex flex-col pt-2 px-4 gap-1 h-52 overflow-auto'>
-                    {collection?.map(item =>
-                      <div className='flex bg-stone-800 p-1' key={item.title}>
-                        <span className='flex-1 p-2 text-lg'>{item.title}</span>
-                        
-                    {item.pins?.filter(pin=>pin.item._id===pinDetail._id).length===1 ?
-                          <button
-                            onClick={()=>removePinFromCollection(item,pinDetail._id)}
-                            className='btn btn-error font-bold p-2 px-3'>
-                        Remove
-                      </button> :
-                      <button
-                        onClick={()=>{addPinToSelectedCollection(item,pinDetail._id)}}
-                        className='btn btn-success font-bold p-2 px-3'>
-                        Add
-                          </button>}
-                        
-                      </div>)}
-                  </div>
-                  </div>}
+                <CollectionCreation userId = {session?.user.id} pinId= {pinDetail._id}/>
                   <a
                 href={`${pinDetail.image?.asset.url}?dl=`}
                 download

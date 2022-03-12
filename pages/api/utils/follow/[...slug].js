@@ -31,7 +31,7 @@ export default async function handler(req, res) {
                                 _ref: uploaderId,
                             },
                         }])
-                        .commit()
+        .commit()
     
     res.status(200).json({message: uploaderResponse && userResponse ? 'success':'failed'});
 }

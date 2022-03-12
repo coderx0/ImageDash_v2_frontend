@@ -9,7 +9,7 @@ const TopPins = ({ topPins }) => {
     useEffect(() => {
         const changeTimer = setTimeout(() => {
             setPinIndex(prev=>((prev+1)%3))
-         }, 10000);
+         }, 5000);
         return () => {clearTimeout(changeTimer)};
     },[pinIndex]);
 
@@ -23,6 +23,7 @@ const TopPins = ({ topPins }) => {
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
 </svg>
           </button>
+          <div className=''>
           <AnimatePresence exitBeforeEnter>
           {topPins.map((pin,idx) =>
               (idx===pinIndex && <motion.div
@@ -31,7 +32,7 @@ const TopPins = ({ topPins }) => {
               animate={{ x: 0,opacity:1 }}
               exit={{ x: -100, opacity: 0 }}
               transition={{type:'linear'}}
-              className='flex flex-col relative items-center'>
+              className='flex flex-col h-full w-full relative items-center'>
           <div className='h-full'>
           <Image
               className='object-cover'
@@ -48,6 +49,7 @@ const TopPins = ({ topPins }) => {
               </motion.div>))
           }
           </AnimatePresence>
+          </div>
           <button className='bg-slate-900 w-6 md:w-12 md:p-2 md:animate-pulse'>
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />

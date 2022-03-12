@@ -1,5 +1,4 @@
 import { hashPassword } from '../../../lib/auth';
-import { ConnectToDatabase } from '../../../lib/db';
 import { client } from "../../../lib/sanityClient";
 
 async function handler(req, res) {
@@ -26,29 +25,6 @@ async function handler(req, res) {
     return;
   }
 
-  // let client;
-
-  // try {
-  //   client = await ConnectToDatabase();
-  // } catch (error) {
-  //   res.status(422).json({
-  //     errorMessage:
-  //       'Could not connect to database',
-  //   });
-  // }
-
-  // const db = client.db();
-
-  // let existingUser;
-
-  // try {
-  //   existingUser = await db.collection('users').findOne({ '$or':[{email: email},{userName:userName}] });
-  // } catch (error) {
-  //   res.status(422).json({
-  //     errorMessage:
-  //       'something wrong happened. Try again later!',
-  //   });
-  // }
   const mailQuery = `*[_type == "user" && email == '${email}']{
     email,
   }`;
@@ -66,12 +42,12 @@ async function handler(req, res) {
     if (userData.length > 0) {
       res.status(200).json({ errorMessage: "username already exists." });
     } else {
-      // const hashedPassword = await hashPassword(password);
+      const hashedPassword = await hashPassword(password);
       const doc = {
         _type: 'user',
         userName: userName,
         email: email,
-        password: password,
+        password: hashedPassword,
         image:'https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-man-default-avatar-png-image_2813122.jpg'
       };
       const response = await client.create(doc);

@@ -16,7 +16,7 @@ const CollectionFeed = ({ viewPage, collections }) => {
     showableCollections = collections
   else
      showableCollections = collections.filter(collection =>
-        collection?.pins.length > 1);
+        collection?.pins?.length > 1);
     
   return (
            <Masonry
@@ -55,7 +55,7 @@ const CollectionFeed = ({ viewPage, collections }) => {
                           <div className='font-bold text-lg flex p-2'>
                               <h1 className='flex-1'>{collection.title}</h1>
                             <h1 className='px-2 flex items-center gap-2'>
-                            <span> {collection.pins.length}</span>
+                            <span> {collection?.pins?.length}</span>
                               <span><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
   <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
 </svg></span>

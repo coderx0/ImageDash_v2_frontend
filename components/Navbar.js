@@ -2,13 +2,15 @@ import {React, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { FaCompass } from "react-icons/fa";
+import { AiOutlineMenu } from "react-icons/ai";
 
+import Sidebar from "./Sidebar";
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [userData, setUserData] = useState(null);
   const [authAlert, setAuthAlert] = useState(null);
   const searchInputRef = useRef();
+  const [sideBar, setSideBar] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -35,13 +37,20 @@ const Navbar = () => {
     router.push(`/search/${searchTerm}`);
   }
 
+  const openSideBar = () => {
+    setSideBar(prev=>!prev);
+}
     return (
       <>
          {authAlert && <div className="shadow-lg flex justify-around p-6 rounded-box absolute m-8 text-[20px] right-0 w-72 z-30 bg-red-500">
     <span>{authAlert}</span>
-</div>}
+        </div>}
+        <Sidebar userId={session?.user.id} sideBar={sideBar} setSideBar={setSideBar}/>
         <div className="bg-stone-900 border-b-2 border-sky-500 font-bold h-16 relative sticky top-0 z-20 text-3xl flex justify-between items-center gap-2">
-       
+          <button className="btn btn-square relative" onClick={openSideBar}>
+            <AiOutlineMenu className="h-4 w-4" />
+          </button>
+         
         <span className="px-1 md:px-2 text-xl md:text-3xl">
             <Link href="/">IDash</Link>
           </span>
@@ -56,11 +65,11 @@ const Navbar = () => {
 </svg>
             </button>
           </form>
-          <Link href="/explore">
+          {/* <Link href="/explore">
           <button className="btn px-1 text-3xl rounded-full">
               <FaCompass/>
           </button>
-          </Link>
+          </Link> */}
 
           {userData &&
             <div className="mx-1 relative dropdown dropdown-hover">
@@ -104,21 +113,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
-
-// userData && <div className="mx-1 relative dropdown dropdown-hover">
-//               <div className="" tabIndex="0">
-//               <img src={userData.image} className="inline-block h-9 w-9 md:h-11 md:w-11 object-cover rounded-full border-2" alt="up" />
-//               </div>
-//               <ul tabIndex="0" className="flex flex-col items-end p-4 text-[15px] dropdown-content bg-stone-800 rounded-box w-48 absolute top-15 right-0">
-//               <li className="flex w-full p-1 justify-around border-b-2"><img src={userData.image} alt={userData.userName} className="h-12 w-12 border-2 object-cover rounded-full inline-block"/>
-//                 <h1 className="text-lg p-2">{userData.userName}</h1></li>
-//               <li className="hover:bg-stone-700 w-full text-right mt-2 pr-4 rounded-box">
-//               <Link href={`/user-profile/${session?.user?.id}`}>Profile</Link>      
-//               </li> 
-//               <li className="hover:bg-red-500 w-full text-right mt-2 pr-4 rounded-box cursor-pointer" onClick={() => { setUserData(null);return signOut({redirect:false})}}>
-//                 Logout
-//               </li> 
-//             </ul>
-//           </div>

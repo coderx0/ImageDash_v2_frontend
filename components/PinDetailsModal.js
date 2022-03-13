@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Pin from './Pin';
 import CollectionCreation from "./CollectionCreation";
 import FollowUser from "./FollowUser";
+import Comment from './Comment';
 
 const breakPointObj = {
   default: 2,
@@ -17,17 +18,13 @@ const PinDetailsModal = (props) => {
   const pinDetail = props?.pinDetail;
   const setShowPinModal = props?.setShowPinModal;
   const session = props?.session;
-  
-  const collectionInputRef = useRef();
+
   const [pins, setPins] = useState(null);
   const [moreDetails, setMoreDetails] = useState(null);
-  const [comment, setComment] = useState('');
-  const [addingComment, setAddingComment] = useState(false);
   const [likingPost, setLikingPost] = useState(false);
   const [savingPost, setSavingPost] = useState(false);
   const [pinSaves, setPinSaves] = useState(null);
   const [pinLikes, setPinLikes] = useState(null);
-  const [followSuccess, setFollowSuccess] = useState(false);
 
   useEffect(() => {
     if (pinDetail._id) {
@@ -69,17 +66,6 @@ const PinDetailsModal = (props) => {
     }
   };
 
-  const addComment = () => {
-    if (comment && session) {
-      setAddingComment(true);
-      fetch(`/api/utils/comment/${pinDetail._id}/${session.user.id}/${comment}`).then(response => response.json()).then(data => {
-        setComment('');
-        setMoreDetails((prevData) => ({ ...prevData, comments: data.comments }));
-        setAddingComment(false);
-      })
-    }
-  };
-
   const closeModal = (e) => {
       if (e.target.id === "pinBackdrop") {
           setShowPinModal(null);
@@ -91,13 +77,7 @@ const PinDetailsModal = (props) => {
       <div
         id="pinModal"
       className="bg-base-100 mt-16 md:mt-16 h-[92vh] md:h-[90vh] overflow-x-hidden overflow-y-auto md:mx-6 xl:mx-24">
-        <button
-          onClick={()=>setShowPinModal(null)}
-          className='z-10 sticky top-0 md:hidden btn btn-error rounded-none mb-1 w-full text-lg font-bold'>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-</svg>
-        </button>
+       
       {pinDetail && (
         <div className="flex flex-col w-full md:px-4">
           <div className='flex justify-between text-md md:text-xl p-2 w-full'>
@@ -115,7 +95,14 @@ const PinDetailsModal = (props) => {
                   {moreDetails &&
                     <FollowUser userFollowers={moreDetails.postedBy.followers} id={pinDetail.postedBy._id} userId={session?.user.id}/>
                   }
-              </div>
+                </div>
+                <button
+          onClick={()=>setShowPinModal(null)}
+          className='md:hidden btn btn- rounded-none mb-1 text-lg font-bold'>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+</svg>
+        </button>
             </div>
             <div className='hidden md:flex btn-group  relative'>
                 <button className='btn btn-outline p-2 px-3 border-2 hover:bg-red-500 text-lg' onClick={() => { likePin(pinDetail._id) }}>
@@ -196,47 +183,7 @@ const PinDetailsModal = (props) => {
         )}
         
         <div className='flex py-2 px-1 md:px-4 w-full flex-col md:flex-row'>
-          <div className='md:w-[40%] md:pr-4'>
-          <h2 className="mt-5 text-2xl font-bold">Comments</h2>
-            <div className="max-h-[220px] overflow-y-auto">
-              {moreDetails?.comments?.map((item) => (
-                <div className="flex my-4  mx-2 relative overflow-visible items-center rounded-box" key={item.comment}>
-                  <img
-                    src={item.postedBy?.image}
-                    className="h-10 w-10 object-cover rounded-full cursor-pointer"
-                    alt="user-profile"
-                  />
-                  
-                  <div className="ml-2 flex flex-col">
-                    <p className="font-bold underline text-sm">{item.postedBy?.userName}</p>
-                    <p className='text-md'>{item.comment}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex mt-6 w-full">
-            <Link href={`/user-profile/${session?.user.id}`}>
-                  <img
-                    src={session?.user.image}
-                    className="w-8 h-8 my-1 md:w-10 md:h-10 rounded-full object-cover cursor-pointer"
-                    alt="user-profile" />
-              </Link>
-              <input
-                className="flex-1 input input-bordered"
-                type="text"
-                placeholder="Add a comment"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                />
-             <button
-                type="button"
-                className="mx-1 btn btn-success font-bold"
-                onClick={addComment}
-              >
-                {addingComment ? 'Doing...' : 'Done'}
-              </button>
-          </div>
-          </div>
+          <Comment session={session} pinId={pinDetail._id} setMoreDetails={setMoreDetails} comments={moreDetails?.comments}/>
           <div className='md:w-[60%]'>
           {pins?.length > 0 && (
         <h2 className="text-center font-bold text-2xl mt-8 mb-4">

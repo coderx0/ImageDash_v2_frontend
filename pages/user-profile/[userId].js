@@ -268,7 +268,7 @@ const UserProfile = ({user}) => {
                     <div
                        key={follower.following?._id}
                       className="flex flex-col w-40 border-2 bg-slate-900 rounded-box">
-                      <div className='flex bg-stone-800 rounded-box h-24 items-center justify-center p-2'>
+                      <div className='flex flex-col bg-stone-800 rounded-box h-30 items-center justify-center p-2'>
                       <Image
                         src={follower?.following?.image}
                         height={50}

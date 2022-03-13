@@ -2,7 +2,7 @@ import { cdnClient } from "../lib/sanityClient";
 import { feedQuery } from "../lib/Data";
 import Feed from "../components/Feed";
 import { useSession } from "next-auth/react";
-import { categories } from "../lib/Data";
+// import { categories } from "../lib/Data";
 import { useRouter } from "next/router";
 // import TopPins from "../components/TopPins";
 import Image from "next/image";
@@ -25,7 +25,7 @@ export default function Home({ pins,topPins,collections }) {
             Share Images and connect with people
           </div>
       </div>
-      <div className="overflow-y-hidden overflow-x-scroll whitespace-nowrap bg-slate-900">
+      {/* <div className="overflow-y-hidden overflow-x-scroll whitespace-nowrap bg-slate-900">
         {categories.map(category => <div
           className="hover:bg-slate-800 inline-block p-2 text-center w-[80px] rounded-full"
           key={category.name}
@@ -40,13 +40,13 @@ export default function Home({ pins,topPins,collections }) {
             />
           <h1>{category.name}</h1>
       </div>)}
-      </div>
+      </div> */}
       <div>
         {/* <div>
         <h1 className='text-center font-semibold text-xl my-4'>Top Pins</h1>
         <TopPins topPins={topPins}/>
         </div> */}
-      <h1 className="pt-2 text-center font-bold text-2xl">Pins</h1>
+      {/* <h1 className="pt-2 text-center font-bold text-2xl">Pins</h1> */}
         <Feed pins={pins} />
       </div>
   </>

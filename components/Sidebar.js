@@ -17,34 +17,43 @@ const Sidebar = ({ userId,sideBar, setSideBar }) => {
         router.push(`/search/${searchTerm}`);
     };
     const openPage = (page) => {
-        setSideBar(false);
-        router.push(`/${page}`)
+      setSideBar(false);
+      if (userId)
+        router.push(`/${page}`);
+      else
+        router.push('/authentication');
     }
     
   return (
     <AnimatePresence>
-          {sideBar && <div
-          className="fixed h-[100vh] w-[100vw] flex top-16 left-0 z-50">
+      {sideBar && <div
+        onClick={()=>setSideBar(false)}
+          className="fixed h-[100vh] w-[100vw] flex top-16 left-0 z-50 backdrop-blur-sm">
             <motion.div
-                  key="sidebar"
+          key="sidebar"
+          onClick={e=>e.stopPropagation()}
           initial={{x: -300 }}
           animate={{ x: 0}}
           exit={{ x: -300 }}
-          transition={{type:'linear'}}
-              className="w-80 bg-stone-900 overflow-y-auto">
+          transition={{type:'linear',duration:0.2}}
+              className="w-64 bg-stone-900 overflow-y-auto">
               <div className="p-1">
                 <h1 className={optionsClass} onClick={()=>openPage('explore')}><FaWpexplorer className="w-6 h-6"/> Explore</h1>
                 <h1 className={optionsClass} onClick={()=>openPage('collections')}><MdOutlineCollections className="w-6 h-6"/> Collections</h1>
                 <h1 className={optionsClass}><FaHotjar className="w-6 h-6"/>Trending</h1>
-                <span className="divider text-sm text-stone-400 my-8">My Domain</span>
+            {userId && <div>
+              <span className="divider text-sm text-stone-400 my-8">My Domain</span>
                 <h1 className={optionsClass} onClick={()=>openPage(`userUploads/${userId}`)}><FaUpload className="w-5 h-5"/>Uploaded</h1>
                 <h1 className={optionsClass} onClick={()=>openPage(`userSaves/${userId}`)}><FaRegSave className="w-5 h-5" />Saved</h1>
                 <h1 className={optionsClass} onClick={()=>openPage(`userLikes/${userId}`)}><AiFillLike className="w-5 h-5"/>Liked</h1>
-                {/* <h1 className={optionsClass}><FaDownload className="w-5 h-5"/>Downloaded</h1> */}
+                
+              </div>}   
+            
+               {/* <h1 className={optionsClass}><FaDownload className="w-5 h-5"/>Downloaded</h1> */}
               </div>
               <span className="divider text-stone-400 text-sm">Categories</span>
             {categories.map(category => <div
-          className="hover:bg-slate-800 flex gap-4 items-center w-full p-2"
+          className="hover:bg-slate-800 cursor-pointer flex gap-4 items-center w-full p-2"
           key={category.name}
         onClick={()=>searchCategory(category.name)}
         >
@@ -57,17 +66,7 @@ const Sidebar = ({ userId,sideBar, setSideBar }) => {
             />
           <h1>{category.name}</h1>
       </div>)}
-            </motion.div>    
-            <motion.div
-              key='backdrop'
-              initial={{ opacity: 0, scaleX:3 }}
-              animate={{ opacity: 0.5,scaleX:1 }}
-              exit={{ opacity: 0,scaleX:3}}
-              transition={{ type: 'linear', }}
-              onClick={()=>setSideBar(false)}
-              className="h-full w-full opacity-75 bg-base-300">
-
-            </motion.div>
+            </motion.div>  
             </div>}
        </AnimatePresence>
   )

@@ -1,24 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { client } from '../../lib/sanityClient';
 import { userSavedPinsQuery } from '../../lib/Data';
 import Feed from '../../components/Feed';
+import { useRouter } from 'next/router';
 
-const UserSaves = ({ savedPins }) => {
+const UserSaves = () => {
+  const [savedPins, setSavedPins] = useState(null);
+  const router = useRouter();
+  const { userId } = router.query;
+
+  useEffect(() => {
+    const savedPinsQuery = userSavedPinsQuery(userId);
+    client.fetch(savedPinsQuery).then(data => setSavedPins(data));
+  }, []);
+
   return (
     <Feed pins={savedPins}/>
   )
 }
 
 export default UserSaves;
-
-export async function getServerSideProps(context) {
-  const { userId } = context?.params;
-  const savedPinsQuery = userSavedPinsQuery(userId);
-  console.log(userId);
-  const data = await client.fetch(savedPinsQuery);
-  return {
-    props: {
-      savedPins: data,
-    }
-  }
-}

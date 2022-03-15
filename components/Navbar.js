@@ -3,8 +3,9 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { AiOutlineMenu } from "react-icons/ai";
-
+import Image from "next/image";
 import Sidebar from "./Sidebar";
+
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [userData, setUserData] = useState(null);
@@ -46,7 +47,7 @@ const Navbar = () => {
     <span>{authAlert}</span>
         </div>}
         <Sidebar userId={session?.user.id} sideBar={sideBar} setSideBar={setSideBar}/>
-        <div className="bg-stone-900 border-b-2 border-sky-500 font-bold h-16 relative sticky top-0 z-20 text-3xl flex justify-between items-center gap-2">
+        <div className="bg-stone-900 border-b-2 border-sky-500 font-bold h-16 relative sticky top-0 z-20 text-3xl flex items-center gap-2">
           <button className="btn btn-square relative" onClick={openSideBar}>
             <AiOutlineMenu className="h-4 w-4" />
           </button>
@@ -54,27 +55,26 @@ const Navbar = () => {
         <span className="px-1 md:px-2 text-xl md:text-3xl">
             <Link href="/">IDash</Link>
           </span>
-          <form className="flex flex-1 relative" onSubmit={submitSearch}>
+          <form className="flex flex-1 relative md:mx-12 lg:mx-[20vw]" onSubmit={submitSearch}>
             <input ref={searchInputRef}
               type="text"
               placeholder="search for images"
-              className="rounded-lg h-10 outline-none bg-slate-700 w-full pb-2 pl-4 pt-2 text-[18px]" />
-            <button className="h-full bg-slate-700 absolute right-0 p-2 rounded-lg">
+              className="input input-bordered w-full" />
+            <button className="bg-base-100 my-1 mr-1 absolute right-0 p-2 rounded-lg">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
 </svg>
             </button>
           </form>
-          {/* <Link href="/explore">
-          <button className="btn px-1 text-3xl rounded-full">
-              <FaCompass/>
-          </button>
-          </Link> */}
 
           {userData &&
             <div className="mx-1 relative dropdown dropdown-hover">
               <div className="" tabIndex="0">
-              <img src={userData.image} className="inline-block h-9 w-9 md:h-11 md:w-11 object-cover rounded-full border-2" alt="up" />
+                <img src={userData.image}
+                  height={40}
+                  width={40}
+                  className="inline-block h-9 w-9 md:h-11 md:w-11 object-cover rounded-full border-2"
+                  alt="up" />
               </div>
               <ul tabIndex="0" className="flex flex-col items-end p-4 text-[15px] dropdown-content bg-stone-800 rounded-box w-48 absolute top-15 right-0">
               <li className="flex w-full p-1 justify-around border-b-2"><img src={userData.image} alt={userData.userName} className="h-12 w-12 border-2 object-cover rounded-full inline-block"/>
@@ -91,7 +91,7 @@ const Navbar = () => {
 
           {
             !userData && <button className="btn">
-              <Link href="/authentication">Login</Link></button>
+              <Link href="/login">Login</Link></button>
           }
         </div>
         <div className="fixed rounded-full hover:animate-pulse bg-blue-100 text-gray-900 bottom-0 right-0 w-12 md:w-16 h-12 md:h-16 z-10 flex justify-center items-center m-8">

@@ -1,18 +1,15 @@
 import { useState } from "react";
 import { useRouter } from 'next/router';
-import { useSession } from "next-auth/react";
 import {motion} from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
 import Share from "./Share";
+
 import { AiOutlineHeart,AiFillHeart,AiOutlineShareAlt,AiOutlineDownload } from "react-icons/ai";
 
-const Pin = ({ pin,setShowPinModal }) => {
+const Pin = ({ pin,userId,setShowPinModal,setShowLoginModal,setLoginMessage,setLoginImage}) => {
   const [postHovered, setPostHovered] = useState(false);
 
   const router = useRouter();
   
-  const { data: session, status } = useSession();
   const [showShareModal, setShowShareModal] = useState(false);
   const [savingPost, setSavingPost] = useState(false);
   const [likingPost, setLikingPost] = useState(false);
@@ -21,32 +18,47 @@ const Pin = ({ pin,setShowPinModal }) => {
 
   let { postedBy, image, _id, destination,title } = pin;
 
-  let alreadySaved = pinSaves ? pinSaves.filter((item) => item.userId === session?.user.id) :
-    pin?.save?.filter((item) => item?.postedBy?._id === session?.user?.id);
+
+  let alreadySaved = pinSaves ? pinSaves.filter((item) => item.userId === userId) :
+    pin?.save?.filter((item) => item?.postedBy?._id === userId);
   alreadySaved = alreadySaved?.length > 0 ? alreadySaved : [];
 
-  let alreadyLiked = pinLikes ? pinLikes.filter((item) => item.userId === session?.user.id) :
-    pin?.likes?.filter((item) => item?.likedBy?._id === session?.user?.id);
+  let alreadyLiked = pinLikes ? pinLikes.filter((item) => item.userId === userId) :
+    pin?.likes?.filter((item) => item?.likedBy?._id === userId);
   alreadyLiked = alreadyLiked?.length > 0 ? alreadyLiked : [];
 
   const likePin = (id) => { 
-    if (alreadyLiked?.length === 0 && session && postedBy._id!==session?.user.id) {
-      setLikingPost(true);
-      fetch(`/api/utils/like/image_${id}/user_${session.user.id}`).then((response) => response.json()).then((data) => {
-        setPinLikes(data.message);
-        setLikingPost(false);
-      });
+    console.log('strange');
+    if (userId) {
+      if (alreadyLiked?.length === 0 && postedBy._id!==userId) {
+        setLikingPost(true);
+        fetch(`/api/utils/like/image_${id}/user_${userId}`).then((response) => response.json()).then((data) => {
+          setPinLikes(data.message);
+          setLikingPost(false);
+        });
+      }
+    } else {
+      setShowLoginModal(true);
+      setLoginImage(image.asset.url);
+      setLoginMessage(`Login to like the image ${title}`);
     }
+  
   };
   
   const savePin = (id) => {
-    if (alreadySaved?.length === 0 && session && postedBy._id!==session?.user.id) {
-      setSavingPost(true);
-      fetch(`/api/utils/save/image_${id}/user_${session.user.id}`).then((response) => response.json()).then(data => {
-        setPinSaves(data.message);
-        setSavingPost(false);
-      });
-    }
+    if (userId) {
+      if (alreadySaved?.length === 0 && postedBy._id!==userId) {
+        setSavingPost(true);
+        fetch(`/api/utils/save/image_${id}/user_${userId}`).then((response) => response.json()).then(data => {
+          setPinSaves(data.message);
+          setSavingPost(false);
+        });
+      }
+    } else {
+      setShowLoginModal(true);
+      setLoginImage(image.asset.url);
+      setLoginMessage(`Login to save the image ${title}`);
+  }
   };
 
   const showPin = () => {
@@ -70,7 +82,7 @@ const Pin = ({ pin,setShowPinModal }) => {
             <img
               onClick={showPin}
               src={image.asset.url}
-              className="w-full h-full hover:scale-125 transition duration-1000"
+              className="w-full h-full object-cover hover:scale-125 transition duration-1000"
               alt="user-post" 
               />
           </div>
@@ -123,25 +135,34 @@ const Pin = ({ pin,setShowPinModal }) => {
           </h1>
 
           <div className="flex items-center btn-group">
-          <button className="btn bg-slate-900 px-2 text-lg hover:bg-red-500 flex gap-2">
-            {pinLikes? pinLikes.length: pin?.likes?.length}
-            {alreadyLiked.length > 0 &&
+            { alreadyLiked.length>0 && 
+              <button className="btn bg-slate-900 px-2 text-lg hover:bg-red-500 flex gap-2">
+              {pinLikes ? pinLikes.length : pin?.likes?.length}
+              {alreadyLiked.length > 0 &&
               <span>
            <AiFillHeart className="h-5 w-5"/>
               </span>}
+              </button>}
             
-            {alreadyLiked.length === 0 &&
-              <span className="cursor-pointer"  onClick={(e) => {
+            { alreadyLiked.length === 0 && 
+              <button
+                onClick={(e) => {
                 e.stopPropagation();
                 likePin(_id);
-              }}>
+              }}
+                className="btn bg-slate-900 px-2 text-lg hover:bg-red-500 flex gap-2">
+              {pinLikes ? pinLikes.length : pin?.likes?.length}
+             
+              <span className="cursor-pointer">
               <AiOutlineHeart className="h-5 w-5"/>
-</span>}
+                </span>
             </button>
-            <label htmlFor="my-modal" className="btn bg-slate-900 px-2 modal-button" onClick={()=>setShowShareModal(true)}>
-        <AiOutlineShareAlt className="h-5 w-5"/>
-</label>
-            {showShareModal && <Share setShowShareModal={setShowShareModal} title={title} id={_id} imageUrl={image.asset.url}/>}
+            }
+            
+          <label htmlFor="my-modal" className="btn bg-slate-900 px-2 modal-button" onClick={()=>setShowShareModal(true)}>
+          <AiOutlineShareAlt className="h-5 w-5"/>
+          </label>
+          {showShareModal && <Share setShowShareModal={setShowShareModal} title={title} id={_id} imageUrl={image.asset.url}/>}
 
           <a
               href={`${image?.asset?.url}?dl=`}

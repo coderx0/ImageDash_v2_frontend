@@ -1,6 +1,5 @@
 import React, { useEffect, useState,useRef } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
-import { userQuery } from '../../lib/Data';
 import { client } from '../../lib/sanityClient';
 import { useSession,signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -29,13 +28,9 @@ const UserProfile = ({user}) => {
   const [text, setText] = useState('images');
   const [activeBtn, setActiveBtn] = useState('images');
   const [uploadCount, setUploadCount] = useState(0);
-  // const [followSuccess, setFollowSuccess] = useState(false);
   const [followers, setFollowers] = useState([]);
   const [collections, setCollections] = useState([]);
   const [imageAsset, setImageAsset] = useState(null);
-  // const [loading, setLoading] = useState(false);
-  // const [userFollowers, setUserFollowers] = useState(user.followers);
-
   const userNameRef = useRef();
   const aboutRef = useRef();
 

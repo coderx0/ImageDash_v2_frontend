@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 const Auth = () => {
-    const [isLogin, setIsLogin] = useState(true);
+    // const [isLogin, setIsLogin] = useState(true);
     const userNameRef = useRef();
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -29,25 +29,25 @@ const Auth = () => {
         const enteredEmail = emailRef.current.value;
         const enteredPassword = passwordRef.current.value;
         
-        if (isLogin) {
-            setLoading(true);
+        // if (isLogin) {
+        //     setLoading(true);
 
-            const result = await signIn('credentials', {
-                redirect: false,
-                email: enteredEmail,
-                password: enteredPassword,
-              });
+        //     const result = await signIn('credentials', {
+        //         redirect: false,
+        //         email: enteredEmail,
+        //         password: enteredPassword,
+        //       });
            
-            if (!result.error) {
-                setLoading(false);
-                router.replace("/");
-            }
-            else
-                setAuthAlert({type:"error",message:result.error});
-            setLoading(false);
-        }
+        //     if (!result.error) {
+        //         setLoading(false);
+        //         router.replace("/");
+        //     }
+        //     else
+        //         setAuthAlert({type:"error",message:result.error});
+        //     setLoading(false);
+        // }
 
-        else {
+        
             setLoading(true);
             const confirmedPassword = confirmPasswordRef.current.value;
             const enteredUserName = userNameRef.current.value;
@@ -97,11 +97,11 @@ const Auth = () => {
                 } 
             }
         return data;
-        }
+        
     }
-    const authModeHandler = () => {
-        setIsLogin(prev => !prev);
-    }
+    // const authModeHandler = () => {
+    //     setIsLogin(prev => !prev);
+    // }
     
     const alertClass = "shadow-lg flex justify-around p-6 rounded-box absolute top-30 text-md right-0 w-72 z-20";
 
@@ -140,12 +140,12 @@ const Auth = () => {
                     </label> 
                     <input ref={emailRef} type="email" placeholder="Email" className="input input-lg"/>
                             </div>
-                {!isLogin && <div className="form-control">
+                 <div className="form-control">
                     <label className="label">
                         <span className="label-text text-2xl">User Name</span>
                     </label> 
                     <input ref={userNameRef} type="text" placeholder="username" className="input input-lg"/>
-                </div>}
+                </div>
                             
                 <div className="form-control">
                     <label className="label">
@@ -153,14 +153,14 @@ const Auth = () => {
                     </label> 
                     <input ref={passwordRef} type="password" placeholder="password" className="input input-lg"/>
                 </div>
-                {!isLogin && <div className="form-control">
+               <div className="form-control">
                     <label className="label">
                         <span className="label-text text-2xl">Confirm Password</span>
                     </label> 
                     <input ref={confirmPasswordRef} type="password" placeholder="password" className="input input-lg"/>
-                </div>}
+                </div>
                 <div className="text-center mt-4">
-                    <button className="btn glass btn-wide text-lg">{isLogin ? 'Login' : 'Signup'}</button>
+                    <button className="btn glass btn-wide text-lg">Signup</button>
                 </div>        
                 </form>
                         
@@ -168,10 +168,13 @@ const Auth = () => {
                             OR
                 </div>        
                 <div className="text-center">
-                            {isLogin && <button className="btn" onClick={() => { localStorage.setItem('new_user', 0); return signIn('google')}}>Sign in with Google</button>}
-                            {!isLogin && <button className="btn" onClick={() => { localStorage.setItem('new_user', 1); return signIn('google')}}>Sign up with Google</button>}
+                                <button className="btn"
+                                    onClick={() => signIn('google')}>Sign up with Google</button>
+                                
                 </div>
-                <h1 className="text-sm text-center mt-2 cursor-pointer" onClick={authModeHandler}>{isLogin ? "Don't have an account? Signup" : "Already have an acoount? Login"}</h1>
+                            <h1 className="text-sm text-center mt-2 cursor-pointer">
+                                Already have an acoount? Login
+                            </h1>
                 </div>
                 <div className="hidden md:block bg-blue-700 w-full relative">
                         <Image

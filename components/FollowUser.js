@@ -9,16 +9,17 @@ const FollowUser = ({userFollowers,id,userId}) => {
     alreadyFollowed = alreadyFollowed?.length > 0 ? alreadyFollowed : [];
     
     const followUser = async() => {
-      if (alreadyFollowed?.length === 0 && id !== userId) {
-        setLoading(true);
-        const response = await fetch(`/api/utils/follow/${id}/${userId}`);
-          const data = await response.json();
-          if (data.message === "success") {
-              setFollowSuccess(true);
-       }
-        setLoading(false);
-        
-      }
+      if (userId) {
+        if (alreadyFollowed?.length === 0 && id !== userId) {
+          setLoading(true);
+          const response = await fetch(`/api/utils/follow/${id}/${userId}`);
+            const data = await response.json();
+            if (data.message === "success") {
+                setFollowSuccess(true);
+         }
+          setLoading(false); 
+        }
+      } 
     }
 
   return (

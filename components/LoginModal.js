@@ -1,15 +1,19 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FcGoogle } from 'react-icons/fc';
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
-import forest from "../public/images/forest.jpg"
+import toast, { Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/router';
 
 const LoginModal = ({loginMessage,compType,setShowLoginModal,loginImage}) => {
   const emailRef = useRef();
   const passwordRef = useRef();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const login = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const enteredEmail = emailRef.current.value;
     const enteredPassword = passwordRef.current.value;
 
@@ -20,10 +24,30 @@ const LoginModal = ({loginMessage,compType,setShowLoginModal,loginImage}) => {
     });
  
     if (!result.error) {
-      setShowLoginModal(false);
+      setIsLoading(false);
+      compType !== 'page' && setShowLoginModal(false);
+      compType === 'page' && router.push('/');
     }
-    
-    console.log(enteredEmail, enteredPassword);
+     else
+    {
+      toast.error(result.error,{
+        duration: 4000,
+        position: 'top-right',
+        // Styling
+        style: {
+          background: '#f25f4c',
+          color: '#fff',
+          fontWeight:'bold'
+        },
+        // Aria
+        ariaProps: {
+          role: 'status',
+          'aria-live': 'polite',
+        },
+      });
+      setIsLoading(false);
+    }
+
   } 
   const closeModal = (e) => {
     console.log(e.target.id);
@@ -89,9 +113,12 @@ const LoginModal = ({loginMessage,compType,setShowLoginModal,loginImage}) => {
         </div>
 
  
-        <button className='mt-8 btn btn-info w-full'>
+        {!isLoading && <button className='mt-8 btn btn-info w-full'>
           Login
-        </button>
+        </button>}
+        {isLoading && <button className='mt-8 btn btn-info loading w-full'>
+        
+        </button>}
       </form>
     
       <h1 className='text-sm mt-4'>Don&lsquo;t have an account ?
@@ -109,14 +136,16 @@ const LoginModal = ({loginMessage,compType,setShowLoginModal,loginImage}) => {
       {compType !== 'page' && <div
         id='loginBackdrop'
         onClick={closeModal}
-        className='backdrop-blur-md fixed top-0 left-0 bottom-0 right-0 z-20 flex items-center'>
+        className=' backdrop-blur-md fixed top-0 left-0 bottom-0 right-0 z-20 flex items-center'>
+        <Toaster/>
         {mainComponent}
- 
+      
       </div>}
       {
         compType === 'page' && <div className='flex items-center h-[90vh]'>
+          <Toaster/>
           {mainComponent}
-          </div>
+        </div>
         }
       
     </>

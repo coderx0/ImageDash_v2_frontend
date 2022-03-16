@@ -43,9 +43,9 @@ const Sidebar = ({ userId,sideBar, setSideBar }) => {
                 <h1 className={optionsClass}><FaHotjar className="w-6 h-6"/>Trending</h1>
             {userId && <div>
               <span className="divider text-sm text-stone-400 my-8">My Domain</span>
-                <h1 className={optionsClass} onClick={()=>openPage(`userUploads/${userId}`)}><FaUpload className="w-5 h-5"/>Uploaded</h1>
-                <h1 className={optionsClass} onClick={()=>openPage(`userSaves/${userId}`)}><FaRegSave className="w-5 h-5" />Saved</h1>
-                <h1 className={optionsClass} onClick={()=>openPage(`userLikes/${userId}`)}><AiFillLike className="w-5 h-5"/>Liked</h1>
+                <h1 className={optionsClass} onClick={()=>openPage(`userWork/uploads?uId=${userId}`)}><FaUpload className="w-5 h-5"/>Uploaded</h1>
+                <h1 className={optionsClass} onClick={()=>openPage(`userWork/saves?uId=${userId}`)}><FaRegSave className="w-5 h-5" />Saved</h1>
+                <h1 className={optionsClass} onClick={()=>openPage(`userWork/likes?uId=${userId}`)}><AiFillLike className="w-5 h-5"/>Liked</h1>
                 
               </div>}   
             

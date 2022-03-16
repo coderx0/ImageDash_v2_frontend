@@ -2,9 +2,7 @@ import { client } from "../../lib/sanityClient";
 import { searchQuery } from "../../lib/Data";
 import Feed from "../../components/Feed";
 import Layout from "../../components/Layout";
-import Lottie from "lottie-react";
-import notFound from "../../public/notFound.json";
-
+import NotFound from "../../components/NotFound";
 const SearchTerm = ({searchedPins,searchTerm}) => {
     
     return (
@@ -19,10 +17,7 @@ const SearchTerm = ({searchedPins,searchTerm}) => {
                 <div className="text-center text-xl my-8 flex flex-col">
                     <h1>No results found.</h1>
         
-                    <Lottie
-                        className="h-[70vh]"
-                        animationData={notFound}
-                        loop />
+                   <NotFound/>
                     
                 <div>
                         

@@ -3,58 +3,46 @@ import {signIn,getSession} from "next-auth/react";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import toast, { Toaster } from 'react-hot-toast';
 
 const Auth = () => {
-    // const [isLogin, setIsLogin] = useState(true);
     const userNameRef = useRef();
     const emailRef = useRef();
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
-    const [authAlert, setAuthAlert] = useState(null);
     const [loading,setLoading] = useState(false);
 
     const router = useRouter();
-
-    useEffect(() => {
-        let authAlertTimer = setTimeout(() => setAuthAlert(null), 3000);
-
-        return () => {
-            clearTimeout(authAlertTimer);
-        }
-    }, [authAlert]);
 
     const submitHandler = async (event) => {
         event.preventDefault();
 
         const enteredEmail = emailRef.current.value;
         const enteredPassword = passwordRef.current.value;
-        
-        // if (isLogin) {
-        //     setLoading(true);
 
-        //     const result = await signIn('credentials', {
-        //         redirect: false,
-        //         email: enteredEmail,
-        //         password: enteredPassword,
-        //       });
-           
-        //     if (!result.error) {
-        //         setLoading(false);
-        //         router.replace("/");
-        //     }
-        //     else
-        //         setAuthAlert({type:"error",message:result.error});
-        //     setLoading(false);
-        // }
-
-        
             setLoading(true);
             const confirmedPassword = confirmPasswordRef.current.value;
             const enteredUserName = userNameRef.current.value;
 
             if (enteredPassword !== confirmedPassword)
             {
-                setAuthAlert({type:"error",message:"Password did not match!"})
+                toast.error('password did not match',{
+                    duration: 4000,
+                    position: 'top-right',
+                    // Styling
+                    style: {
+                        background: '#f25f4c',
+                        color: '#fff',
+                        fontWeight:'bold'
+                      },
+                 
+                    // Aria
+                    ariaProps: {
+                      role: 'status',
+                      'aria-live': 'polite',
+                    },
+                  });
+                // setAuthAlert({type:"error",message:"Password did not match!"})
                 setLoading(false);
                 return;
             }
@@ -77,13 +65,47 @@ const Auth = () => {
         
             if (data.errorMessage) {
                 setLoading(false);
-                setAuthAlert({type:"error",message:data.errorMessage});
+                toast.error(data.errorMessage,{
+                    duration: 4000,
+                    position: 'top-right',
+                    // Styling
+                    style: {
+                        background: '#f25f4c',
+                        color: '#fff',
+                        fontWeight:'bold'
+                      },
+                    className: 'bg-red-200',
+                 
+                    // Aria
+                    ariaProps: {
+                      role: 'status',
+                      'aria-live': 'polite',
+                    },
+                  });
+                // setAuthAlert({type:"error",message:data.errorMessage});
                 return;
         }
 
             if (data.successMessage)
             {
-                setAuthAlert({type:"success",message: data.successMessage});
+                toast.success(data.successMessage,{
+                    duration: 4000,
+                    position: 'top-right',
+                    // Styling
+                    style: {
+                        background: '#2ecc71',
+                        color: '#fff',
+                        fontWeight:'bold'
+                      },
+                    className: 'bg-red-200',
+                 
+                    // Aria
+                    ariaProps: {
+                      role: 'status',
+                      'aria-live': 'polite',
+                    },
+                  });
+                // setAuthAlert({type:"success",message: data.successMessage});
                 setLoading(false);
                 const result = await signIn('credentials', {
                     redirect: false,
@@ -99,19 +121,12 @@ const Auth = () => {
         return data;
         
     }
-    // const authModeHandler = () => {
-    //     setIsLogin(prev => !prev);
-    // }
     
-    const alertClass = "shadow-lg flex justify-around p-6 rounded-box absolute top-30 text-md right-0 w-72 z-20";
 
     
     return (
         <>
-               {authAlert && <div className={`${alertClass} + ${authAlert.type==="error"?" bg-red-500":" bg-green-500"}`}>
-    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                <span>{authAlert.message}</span>
-</div>}
+            <Toaster/>
         <div className="relative overflow-hidden">
             {loading && <div className="absolute top-0 left-0 right-0 bottom-0 backdrop-blur-md z-50"></div>}
             <motion.div

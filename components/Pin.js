@@ -11,17 +11,10 @@ const Pin = ({ pin,userId,setShowPinModal,setShowLoginModal,setLoginMessage,setL
   const router = useRouter();
   
   const [showShareModal, setShowShareModal] = useState(false);
-  const [savingPost, setSavingPost] = useState(false);
   const [likingPost, setLikingPost] = useState(false);
   const [pinLikes, setPinLikes] = useState(null);
-  const [pinSaves, setPinSaves] = useState(null);
 
   let { postedBy, image, _id, destination,title } = pin;
-
-
-  let alreadySaved = pinSaves ? pinSaves.filter((item) => item.userId === userId) :
-    pin?.save?.filter((item) => item?.postedBy?._id === userId);
-  alreadySaved = alreadySaved?.length > 0 ? alreadySaved : [];
 
   let alreadyLiked = pinLikes ? pinLikes.filter((item) => item.userId === userId) :
     pin?.likes?.filter((item) => item?.likedBy?._id === userId);
@@ -45,22 +38,6 @@ const Pin = ({ pin,userId,setShowPinModal,setShowLoginModal,setLoginMessage,setL
   
   };
   
-  const savePin = (id) => {
-    if (userId) {
-      if (alreadySaved?.length === 0 && postedBy._id!==userId) {
-        setSavingPost(true);
-        fetch(`/api/utils/save/image_${id}/user_${userId}`).then((response) => response.json()).then(data => {
-          setPinSaves(data.message);
-          setSavingPost(false);
-        });
-      }
-    } else {
-      setShowLoginModal(true);
-      setLoginImage(image.asset.url);
-      setLoginMessage(`Login to save the image ${title}`);
-  }
-  };
-
   const showPin = () => {
     // router.push(`/pindetails/${_id}`);
     setShowPinModal(pin);
@@ -100,33 +77,7 @@ const Pin = ({ pin,userId,setShowPinModal,setShowLoginModal,setLoginMessage,setL
             </span>
         </motion.div>
           }
-          {
-            postHovered && (
-              <motion.div
-                initial={{ y: -10 }}
-                animate={{ y: 0 }}
-                className="absolute top-0 flex">
-                {alreadySaved?.length !== 0 ? (
-                  <button type="button"
-                    onClick={e => e.stopPropagation()}
-                    className="bg-red-500 opacity-70 hover:opacity-100 text-white font-semibold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none">
-                   Saved
-                </button>
-              ) : (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    savePin(_id);
-                  }}
-                  type="button"
-                  className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none"
-                >
-                {savingPost ? 'Saving' : 'Save'}
-                </button>
-              )}
-              </motion.div>
-            )
-          }
+        
         </div>
       
           <div className="bg-slate-900 flex relative justify-around items-center">

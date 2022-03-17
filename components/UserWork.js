@@ -13,12 +13,14 @@ const UserWorks = ({userId,work}) => {
   useEffect(() => {
     let query;
     switch (work) {
-      case 'uploads': query = userCreatedPinsQuery(userId); break;
-      case 'saves': query = userSavedPinsQuery(userId); break;
+      case 'uploads': query = userCreatedPinsQuery(userId);
+        client.fetch(query).then(data => setPins(data[0].pins))
+        break;
       case 'likes': query = userLikedPinsQuery(userId);
+      client.fetch(query).then(data => setPins(data))
    }
       
-    client.fetch(query).then(data => setPins(data));
+    ;
   }, [])
  
   if (!pins)
@@ -38,7 +40,7 @@ const UserWorks = ({userId,work}) => {
       animationData={boring}
     loop />
     </div>
-  
+  console.log(pins);
   return (
  <Feed pins={pins}/>
   )

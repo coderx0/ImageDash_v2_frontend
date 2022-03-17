@@ -18,6 +18,8 @@ export default async function handler(req, res) {
         _ref: userId,
       },
     }])
+    .setIfMissing({totalLikes:0})
+    .inc({totalLikes:1})
     .commit();
     
     

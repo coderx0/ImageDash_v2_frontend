@@ -18,7 +18,8 @@ export default async function handler(req, res) {
             _type: 'reference',
             _ref: imageAsset._id,
           },
-        },
+      },
+        totalLikes:0,
         userId: userId,
         postedBy: {
           _type: 'postedBy',
@@ -36,12 +37,23 @@ export default async function handler(req, res) {
           _type: 'reference',
           _ref: id
       }
-  }]);
+    }]);
+    const userPatch = client.patch(userId)
+    .setIfMissing({ uploads: [] })
+      .insert('after', 'uploads[-1]', [{
+        _key: nanoid(),
+        title,
+        item: {
+            _type: 'reference',
+            _ref: id
+        }
+    }]);
   
   const response = await client
     .transaction()
     .create(doc)
     .patch(categoryPatch)
+    .patch(userPatch)
     .commit();
   
     res.status(200).json({ message: "Success" });

@@ -1,4 +1,6 @@
 import React,{useState,useRef} from 'react'
+import { BiImageAdd } from "react-icons/bi";
+import { AiFillCloseCircle } from "react-icons/ai";
 
 const CollectionCreation = ({ userId,pinId }) => {
     const [showCollectionModal, setShowCollectionModal] = useState(false);
@@ -69,18 +71,23 @@ const CollectionCreation = ({ userId,pinId }) => {
       <>
            <button className='btn btn-outline p-2 hover:bg-sky-600'
                   onClick={collectionModal}>
-                  Collection
-                </button>
+        <BiImageAdd className='w-5 h-5'/>
+        <span className='mx-2'>Collect</span>
+      </button>
+
+
                 {showCollectionModal &&
         <div
-          className='w-72 p-2 absolute -bottom-50 right-0 bg-stone-900 border-2 rounded-xl'>
-                  <button className='bg-red-500 absolute -top-4 -left-4 p-1 border-4 rounded-full'
+          className='fixed top-12 bottom-0 left-0 right-0 flex justify-center items-center z-20 bg-[#434646b1]' >
+          <div className='bg-stone-900 w-72 rounded-box'>
+          <button className=''
                       onClick={() => setShowCollectionModal(false)}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" />
-</svg>
-          </button>
-          <div className='flex flex-col pt-2 px-4 gap-1 h-52 overflow-auto'>
+                 <AiFillCloseCircle className='w-7 h-7'/>
+            </button>
+            {collection.length === 0 && <div>
+              No collections found
+            </div>}
+            <div className='flex flex-col pb-4 px-2 gap-1 h-64 overflow-auto'>
                     {collection?.map(item =>
                       <div className='flex bg-stone-800 p-1' key={item.title}>
                         <span className='flex-1 p-2 text-lg'>{item.title}</span>
@@ -98,16 +105,17 @@ const CollectionCreation = ({ userId,pinId }) => {
                           </button>}
                         
                       </div>)}
-                  </div>
-                  <div className="dropdown w-full">
+            </div>
+            <div className="dropdown dropdown-top w-full py-2 px-2">
                   <button tabIndex="0" className="btn btn-info w-full font-bold">Create New Collection</button>
                       <form tabIndex="0" onSubmit={createCollection}
-                          className="py-2 w-full dropdown-content bg-base-700 rounded-box flex gap-2">
+                          className="py-2 dropdown-content bg-stone-700 px-2 flex gap-2">
                   <input type="text" ref={collectionInputRef} placeholder="collection name" className="input input-bordered bg-stone-900 w-full max-w-xs"/>
                       <button className='btn btn-success font-bold'>Create</button>
                   </form>
                   </div>
-                  </div>}
+          </div>     
+          </div>}
     </>
   )
 }

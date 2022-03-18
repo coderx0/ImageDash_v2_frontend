@@ -136,7 +136,7 @@ const LoginModal = ({loginMessage,compType,setShowLoginModal,loginImage}) => {
       {compType !== 'page' && <div
         id='loginBackdrop'
         onClick={closeModal}
-        className=' backdrop-blur-md fixed top-0 left-0 bottom-0 right-0 z-20 flex items-center'>
+        className=' bg-[#34343494] fixed top-0 left-0 bottom-0 right-0 z-20 flex items-center'>
         <Toaster/>
         {mainComponent}
       

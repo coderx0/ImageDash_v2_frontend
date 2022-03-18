@@ -46,12 +46,7 @@ const UserProfile = ({user}) => {
         case 'images':
           fetch(`/api/data/createdPins/${userId}`).then(response => response.json()).then(data => {
             setPins(data.pins);
-            setUploadCount(data.pins.length);
-          });
-          break;
-        case 'saved':
-          fetch(`/api/data/savedPins/${userId}`).then(response => response.json()).then(data => {
-            setPins(data.pins);
+            setUploadCount(data?.pins?.length);
           });
           break;
         case 'followers':
@@ -76,7 +71,7 @@ const UserProfile = ({user}) => {
     if (userId) {
       fetch(`/api/data/createdPins/${userId}`).then(response => response.json()).then(data => {
         setPins(data.pins);
-        setUploadCount(data.pins.length);
+        setUploadCount(data?.pins?.length);
       });
     }
   },[userId])
@@ -165,16 +160,7 @@ const UserProfile = ({user}) => {
           >
            {uploadCount} Images
           </button>
-          { showOption && <button
-            type="button"
-            onClick={(e) => {
-              setText('saved');
-              setActiveBtn('saved');
-            }}
-            className={`${activeBtn === 'saved' ? activeBtnStyles : notActiveBtnStyles}`}
-          >
-            Saved
-          </button>}
+          
           <button
               onClick={(e) => {
               setText('collection');

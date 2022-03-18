@@ -2,8 +2,9 @@ import { client } from "../../lib/sanityClient";
 import { searchQuery } from "../../lib/Data";
 import Feed from "../../components/Feed";
 import Layout from "../../components/Layout";
-import NotFound from "../../components/NotFound";
-const SearchTerm = ({searchedPins,searchTerm}) => {
+import NotFound from "../../lottie/NotFound";
+
+const SearchTerm = ({ searchedPins, searchTerm }) => {
     
     return (
         <>

@@ -25,28 +25,8 @@ export default function Home({ pins,topPins,collections }) {
             Share Images and connect with people
           </div>
       </div>
-      {/* <div className="overflow-y-hidden overflow-x-scroll whitespace-nowrap bg-slate-900">
-        {categories.map(category => <div
-          className="hover:bg-slate-800 inline-block p-2 text-center w-[80px] rounded-full"
-          key={category.name}
-        onClick={()=>searchCategory(category.name)}
-        >
-          <Image
-            src={category.image}
-            alt={category.name}
-            height={100}
-            width={100}
-            className="mx-auto rounded-full object-cover"
-            />
-          <h1>{category.name}</h1>
-      </div>)}
-      </div> */}
+      
       <div>
-        {/* <div>
-        <h1 className='text-center font-semibold text-xl my-4'>Top Pins</h1>
-        <TopPins topPins={topPins}/>
-        </div> */}
-      {/* <h1 className="pt-2 text-center font-bold text-2xl">Pins</h1> */}
         <Feed pins={pins} />
       </div>
   </>
@@ -56,7 +36,6 @@ export default function Home({ pins,topPins,collections }) {
 export async function getStaticProps() {
     
   const data = await cdnClient.fetch(feedQuery);
-  // const topPins = data.filter(pin => pin.likes !== null).sort((a, b) => b.likes.length - a.likes.length).slice(0,3);
 
   return {
       props: {

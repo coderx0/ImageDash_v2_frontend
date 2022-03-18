@@ -6,6 +6,7 @@ import Pin from './Pin';
 import CollectionCreation from "./CollectionCreation";
 import FollowUser from "./FollowUser";
 import Comment from './Comment';
+import LoginModal from './LoginModal';
 
 const breakPointObj = {
   default: 2,
@@ -18,13 +19,13 @@ const PinDetailsModal = (props) => {
   const pinDetail = props?.pinDetail;
   const setShowPinModal = props?.setShowPinModal;
   const session = props?.session;
-
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginMessage, setLoginMessage] = useState('');
   const [pins, setPins] = useState(null);
   const [moreDetails, setMoreDetails] = useState(null);
   const [likingPost, setLikingPost] = useState(false);
-  const [savingPost, setSavingPost] = useState(false);
-  const [pinSaves, setPinSaves] = useState(null);
   const [pinLikes, setPinLikes] = useState(null);
+  const [loginImage, setloginImage] = useState(null);
 
   useEffect(() => {
     if (pinDetail._id) {
@@ -43,27 +44,20 @@ const PinDetailsModal = (props) => {
   alreadyLiked = alreadyLiked?.length > 0 ? alreadyLiked : [];
 
   const likePin = (id) => {
-    if (alreadyLiked?.length === 0 && session) {
-      setLikingPost(true);
-      fetch(`/api/utils/like/image_${id}/user_${session.user.id}`).then((response) => response.json()).then((data) => {
-        setPinLikes(data.message);
-        setLikingPost(false);
-      });
+    if (session) {
+      if (alreadyLiked?.length === 0) {
+        setLikingPost(true);
+        fetch(`/api/utils/like/image_${id}/user_${session.user.id}`).then((response) => response.json()).then((data) => {
+          setPinLikes(data.message);
+          setLikingPost(false);
+        });
+      }
+    } else {
+      setShowLoginModal(true);
+      setloginImage(pinDetail.image.asset.url);
+      setLoginMessage(`Login to like the image '${pinDetail.title}'`);
     }
-  };
-
-  let alreadySaved = pinSaves ? pinSaves.filter((item) => item.userId === session?.user.id) :
-  pinDetail?.save?.filter((item) => item?.postedBy?._id === session?.user?.id);
-  alreadySaved = alreadySaved?.length > 0 ? alreadySaved : [];
-
-  const savePin = (id) => {
-    if (alreadySaved?.length === 0 && session) {
-      setSavingPost(true);
-      fetch(`/api/utils/save/image_${id}/user_${session.user.id}`).then((response) => response.json()).then(data => {
-        setPinSaves(data.message);
-        setSavingPost(false);
-      });
-    }
+  
   };
 
   const closeModal = (e) => {
@@ -73,7 +67,13 @@ const PinDetailsModal = (props) => {
   }
 
   return (
-      <div className='fixed z-10 top-0 left-0 right-0 bottom-0 backdrop-blur-md' id="pinBackdrop" onClick={closeModal}>
+      <div className='fixed z-10 top-0 left-0 right-0 bottom-0 bg-[#434646b1]' id="pinBackdrop" onClick={closeModal}>
+      {showLoginModal &&
+        <LoginModal
+        loginImage={loginImage}
+        loginMessage={loginMessage}
+          setShowLoginModal={setShowLoginModal} />}
+      
       <div
         id="pinModal"
       className="bg-base-100 mt-16 md:mt-16 h-[92vh] md:h-[90vh] overflow-x-hidden overflow-y-auto md:mx-6 xl:mx-24">
@@ -117,11 +117,7 @@ const PinDetailsModal = (props) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>}
                 </button>
-                <button className='btn btn-outline p-2 px-3 border-2 hover:bg-sky-500' onClick={() => { savePin(pinDetail._id) }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg><span className='ml-2'>{alreadySaved.length > 0 ? 'Saved' : 'Save'}</span>
-                </button>
+              
              <CollectionCreation userId = {session?.user.id} pinId = {pinDetail._id}/>
                   <a
                 href={`${pinDetail.image?.asset.url}?dl=`}
@@ -135,7 +131,8 @@ const PinDetailsModal = (props) => {
             </div>
                 
             </div>
-            <div className='md:h-[65vh]'>
+            <div className='h-[68vh]'>
+      
           <img
               className="mx-auto h-full object-cover"
               src={(pinDetail?.image && urlFor(pinDetail?.image).url())}
@@ -161,11 +158,6 @@ const PinDetailsModal = (props) => {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>}
-                </button>
-                <button className='btn btn-outline p-2 hover:bg-sky-500' onClick={() => { savePin(pinDetail._id) }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg><span className='ml-2'>{alreadySaved.length > 0 ? 'Saved' : 'Save'}</span>
                 </button>
                 <CollectionCreation userId = {session?.user.id} pinId= {pinDetail._id}/>
                   <a

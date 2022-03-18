@@ -16,7 +16,7 @@ const CollectionFeed = ({ viewPage, collections }) => {
     showableCollections = collections
   else
      showableCollections = collections.filter(collection =>
-        collection?.pins?.length > 1);
+        collection?.pins?.length > 0);
     
   return (
            <Masonry
@@ -31,7 +31,7 @@ const CollectionFeed = ({ viewPage, collections }) => {
                               <a>
                           <div className='overflow-hidden'>
                             <img
-                                  src={collection.pins[0]?.item.image.asset.url}
+                                  src={collection.pins[0]?.item.image?.asset.url}
                               alt={collection.pins[0]?.item.title}
                              
                                 className='hover:scale-125 transition duration-1000 object-cover'

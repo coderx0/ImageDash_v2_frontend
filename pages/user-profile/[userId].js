@@ -23,7 +23,9 @@ const breakPointObj = {
 const activeBtnStyles = 'btn text-[0.7rem] sm:text-[1rem] text-sky-500 font-bold rounded-none';
 const notActiveBtnStyles = 'btn text-[0.7rem] sm:text-[1rem] rounded-none';
 
-const UserProfile = ({user}) => {
+const UserProfile = ({ user: userData }) => {
+  const [user, setUser] = useState(userData);
+
   const [pins, setPins] = useState();
   const [text, setText] = useState('images');
   const [activeBtn, setActiveBtn] = useState('images');
@@ -31,6 +33,8 @@ const UserProfile = ({user}) => {
   const [followers, setFollowers] = useState([]);
   const [collections, setCollections] = useState([]);
   const [imageAsset, setImageAsset] = useState(null);
+  const [isBannerUploading, setIsBannerUploading] = useState(false);
+  const [isProfilePicUploading, setIsProfilePicUploading] = useState(false);
   const userNameRef = useRef();
   const aboutRef = useRef();
 
@@ -97,28 +101,49 @@ const UserProfile = ({user}) => {
   const updateProfilePic = async () => {
     if (imageAsset)
     {
+      setIsProfilePicUploading(true);
       const response = await axios.post('/api/user-profile/updateProfilePic', {
         userId: session.user.id,
         imageUrl:imageAsset.url
       });
-      console.log(response);
+      setUser(prev=>({...prev,image:response.data.image}));
+      setIsProfilePicUploading(false);
     }  
   };
+
+  const updateBannerPic = async () => {
+    if (imageAsset)
+    {
+      setIsBannerUploading(true);
+      const response = await axios.post('/api/user-profile/updateBannerImage', {
+        userId: session.user.id,
+        imageUrl:imageAsset.url
+      });
+      setUser((prev)=>({...prev,bannerImage:response.data.bannerImage}))
+      setIsBannerUploading(false);
+    }  
+  };
+
+  console.log(user.bannerImage);
 
   const showOption = session ? session.user.id === userId ? true : false : false;
 
   if (!user) return <h1>Loading Profile</h1>;
-
   return (
     <Layout>
       <div className="relative pb-2 h-full justify-center items-center">
       <div className="flex flex-col pb-5">
         <div className="relative flex flex-col mb-7">
-            <img
+         {!user?.bannerImage && <img
               className=" w-full h-48 md:h-64 shadow-lg object-cover"
               src="https://source.unsplash.com/1600x900/?nature,photography,technology"
               alt="user-pic"
-            />
+            />}
+          {user?.bannerImage &&  <img
+              className=" w-full h-48 md:h-64 shadow-lg object-cover"
+              src={user.bannerImage}
+              alt="user-pic"
+            />}
           <div className='flex justify-around lg:justify-center lg:gap-32 p-4 '>
             <div className='flex gap-2 mr-2'>
             <img
@@ -149,7 +174,8 @@ const UserProfile = ({user}) => {
             )}
           </div>
         </div>
-        <div className="sm:mx-auto whitespace-nowrap overflow-y-hidden overflow-x-auto sticky top-16 z-10">
+         
+          <div className="sm:mx-auto whitespace-nowrap overflow-y-hidden overflow-x-auto sticky top-16 z-10">
           <button
             type="button"
             onClick={(e) => {
@@ -193,6 +219,7 @@ const UserProfile = ({user}) => {
               className={`${activeBtn === 'settings' ? activeBtnStyles : notActiveBtnStyles}`}>
               Settings
             </button>}
+       
         </div>
    
           {
@@ -303,9 +330,19 @@ const UserProfile = ({user}) => {
               <div className='pt-1 mx-auto'>
                 <h1 className='text-center m-1 text-lg'>Change Profile Picture</h1>
                 <div className='w-64 '>
-                <ImageUploader imageAsset={imageAsset} profilePage={true} setImageAsset={setImageAsset}/>
+                <ImageUploader  profilePage={true} setImageAsset={setImageAsset}/>
                 </div>
-                <button className='btn btn-info w-full' onClick={updateProfilePic}>Update</button>
+                {!isProfilePicUploading && <button className='btn btn-info w-full' onClick={updateProfilePic}>Update</button>}
+                {isProfilePicUploading && <button className='btn btn-info w-full loading'></button>}
+              </div>
+              <div className='pt-1 mx-auto'>
+                <h1 className='text-center m-1 text-lg'>
+                  Change Banner Image</h1>
+                <div className='w-[80vw] '>
+                <ImageUploader  profilePage={true} setImageAsset={setImageAsset}/>
+                </div>
+               {!isBannerUploading && <button className='btn btn-info w-full' onClick={updateBannerPic}>Update</button>}
+               {isBannerUploading && <button className='btn btn-info w-full loading'></button>}
               </div>
             </div>
           }
@@ -327,6 +364,7 @@ export async function getServerSideProps(context) {
     userName,
     about,
     image,
+    bannerImage,
     followers[]{
       followedBy->{
         _id

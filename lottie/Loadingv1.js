@@ -1,14 +1,15 @@
 import React from 'react'
 import Lottie from "lottie-react";
-import boring from "../public/boring.json";
+import loading1 from "../public/loading1.json";
+
 
 const Boring = () => {
   return (
     <Lottie
     className="h-[70vh]"
-      animationData={boring}
+      animationData={loading1}
     loop />
   )
 }
 
-export default Boring;
+export default Boring

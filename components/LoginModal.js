@@ -33,7 +33,6 @@ const LoginModal = ({loginMessage,compType,setShowLoginModal,loginImage}) => {
       toast.error(result.error,{
         duration: 4000,
         position: 'top-right',
-        // Styling
         style: {
           background: '#f25f4c',
           color: '#fff',
@@ -57,7 +56,8 @@ const LoginModal = ({loginMessage,compType,setShowLoginModal,loginImage}) => {
       }
   }
 
-  const mainComponent = <div className="flex relative w-[80vw] mx-auto overflow-hidden rounded-lg bg-slate-800 lg:max-w-4xl">
+  const mainComponent = <div className="flex relative w-[80%] h-[80%] mx-auto overflow-hidden rounded-lg bg-slate-800 lg:max-w-4xl">
+          
     {compType !== 'page' && <button
       onClick={() => setShowLoginModal(false)}
       className="btn btn-sm  btn-circle absolute right-2 top-2">
@@ -136,13 +136,18 @@ const LoginModal = ({loginMessage,compType,setShowLoginModal,loginImage}) => {
       {compType !== 'page' && <div
         id='loginBackdrop'
         onClick={closeModal}
-        className=' bg-[#34343494] fixed top-0 left-0 bottom-0 right-0 z-20 flex items-center'>
-        <Toaster/>
+        className=' bg-[#11111194] fixed top-10 left-0 bottom-0 right-0 z-20 flex items-center'>
+      
+      <Toaster
+  toastOptions={{
+    className: 'mt-16',
+  }}
+/>
         {mainComponent}
       
       </div>}
       {
-        compType === 'page' && <div className='flex items-center h-[90vh]'>
+        compType === 'page' && <div className='flex items-center h-[90vh] '>
           <Toaster/>
           {mainComponent}
         </div>

@@ -4,12 +4,25 @@ import { categoryDetailQuery } from '../../lib/Data';
 import Feed from '../../components/Feed';
 
  const CategotyDetails = ({categoryData}) => {
-   
+   console.log(categoryData);
+
    return (
-     <div>
-       <h1>{categoryData.title}</h1>
+     <>
+       <div
+         className='h-44 relative'
+         style={{
+           backgroundImage: `url(${categoryData.bannerImage.asset.url})`,
+          }}>
+         <div className='bg-[#11111195] p-12'>
+         <h1 className='text-sky-500 font-bold text-6xl '>{categoryData.title}</h1>
+         <p className=' text-lg'>{categoryData.about}</p>
+      
+       </div>  
+       </div>
+         <div>
        <Feed pins={categoryData.pins}/>
     </div>
+   </>
   )
 }
 

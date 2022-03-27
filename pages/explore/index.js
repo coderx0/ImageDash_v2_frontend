@@ -13,7 +13,7 @@ const breakPointObj = {
     600: 1
 }
 
-const Explore = ({ collections, categoryData }) => {
+const Explore = ({ categoryData }) => {
 
   return (
       <Layout>
@@ -38,12 +38,7 @@ const Explore = ({ collections, categoryData }) => {
                   </div>
               ))}
           </div>
-          <div className='mx-2 md:mx-6 mt-2'>
-          <h1 className="pt-2 font-bold text-2xl">
-              Popular Collections
-          </h1>
-        <CollectionFeed collections={collections}/>
-    </div>
+        
       </Layout>
   )
 }
@@ -51,13 +46,10 @@ const Explore = ({ collections, categoryData }) => {
 export default Explore;
 
 export async function getStaticProps() {
-    
-    const collectionData = await cdnClient.fetch(collectionFeedQuery);
-    const categoryData = await cdnClient.fetch(categoryQuery);
+        const categoryData = await cdnClient.fetch(categoryQuery);
 
     return {
         props: {
-            collections: collectionData,
             categoryData
         },
         revalidate: 3600

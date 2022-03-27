@@ -8,10 +8,10 @@ async function handler(req, res) {
   const {userId,imageUrl} = req.body;
 
 
- const response = await client.patch(userId).set({image:imageUrl}).commit();
+ const response = await client.patch(userId).set({bannerImage:imageUrl}).commit();
 
   if (response) {
-    res.status(200).json({image:response.image});
+    res.status(200).json({bannerImage:response.bannerImage});
 
   } else {
     res.status(200).json({ message: "Something wrong happend" });

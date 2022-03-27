@@ -47,7 +47,7 @@ const Navbar = () => {
     <span>{authAlert}</span>
         </div>}
         <Sidebar userId={session?.user.id} sideBar={sideBar} setSideBar={setSideBar}/>
-        <div className="bg-stone-900 border-b-2 border-sky-500 font-bold h-16 relative sticky top-0 z-20 text-3xl flex items-center gap-2">
+        <div className="bg-stone-900 border-b-2 border-sky-500 font-bold h-16 relative sticky top-0 z-10 text-3xl flex items-center gap-2">
           <button className="btn btn-square relative" onClick={openSideBar}>
             <AiOutlineMenu className="h-4 w-4" />
           </button>

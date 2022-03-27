@@ -1,38 +1,32 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router';
-import UserWorks from '../../components/UserWork';
-import { client } from '../../lib/sanityClient';
 import CollectionFeed from '../../components/CollectionFeed';
+import Loadingv1 from "../../lottie/Loadingv1";
+import Boring from '../../lottie/Boring';
+import useSWR from 'swr';
+import { useSession } from 'next-auth/react';
+
+const fetcher = (url) => fetch(url).then(res => res.json());
 
 const UserCollections = () => {
+    const { data: session, status } = useSession();
+        
     const router = useRouter();
+    if (status === 'unauthenticated')
+        router.replace("/");
+    
     const { uId } = router.query;
-    const [userCollections, setUserCollections] = useState(null);
-    const query = `*[_type == "pinCollection" && userId == '${uId}']{
-        _id,
-        title,
-        pins[]{
-            _key,
-            item->{
-                _id,
-                image{
-                asset->{
-                    url
-                }
-                }
-            }
-            },
-      }`;
 
-    useEffect(() => {
-        client.fetch(query)
-            .then(data => setUserCollections(data));
-    }, []);
-    console.log(userCollections);
-    if (!userCollections)
-        return <h1>Loading</h1>
-  return (
- <CollectionFeed collections={userCollections}/>
+    const { data, error } = useSWR(`/api/data/collections/${uId}`, fetcher);
+
+    if (!data)
+        return <Loadingv1 />
+    
+    if (!data.collections)
+        return <Boring />
+    
+      return (
+ <CollectionFeed viewPage='profile' collections={data.collections}/>
   )
 }
 

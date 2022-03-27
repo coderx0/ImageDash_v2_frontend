@@ -21,7 +21,6 @@ const SearchTerm = ({ searchedPins, searchTerm }) => {
                    <NotFound/>
                     
                 <div>
-                        
                 </div>
                 </div>}
      </>

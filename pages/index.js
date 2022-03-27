@@ -26,10 +26,9 @@ export default function Home({ pins,topPins,collections }) {
           </div>
       </div>
       
-      <div>
         <Feed pins={pins} />
-      </div>
-  </>
+       
+    </>
   )
 }
 

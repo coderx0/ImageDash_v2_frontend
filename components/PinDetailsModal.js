@@ -7,6 +7,8 @@ import CollectionCreation from "./CollectionCreation";
 import FollowUser from "./FollowUser";
 import Comment from './Comment';
 import LoginModal from './LoginModal';
+import LikePin from './LikePin';
+
 
 const breakPointObj = {
   default: 2,
@@ -38,9 +40,9 @@ const PinDetailsModal = (props) => {
         });
    }
     }, [pinDetail._id]);
-    
+  
   let alreadyLiked = pinLikes ? pinLikes.filter((item) => item.userId === session?.user.id) :
-  pinDetail?.likes?.filter((item) => item?.likedBy?._id === session?.user?.id);
+  moreDetails?.likes?.filter((item) => item?.likedBy?._id === session?.user?.id);
   alreadyLiked = alreadyLiked?.length > 0 ? alreadyLiked : [];
 
   const likePin = (id) => {
@@ -67,7 +69,7 @@ const PinDetailsModal = (props) => {
   }
 
   return (
-      <div className='fixed z-10 top-0 left-0 right-0 bottom-0 bg-[#434646b1]' id="pinBackdrop" onClick={closeModal}>
+      <div className='fixed z-10 top-0 left-0 right-0 bottom-0 bg-[#222222b1]' id="pinBackdrop" onClick={closeModal}>
       {showLoginModal &&
         <LoginModal
         loginImage={loginImage}
@@ -76,7 +78,7 @@ const PinDetailsModal = (props) => {
       
       <div
         id="pinModal"
-      className="bg-base-100 mt-16 md:mt-16 h-[92vh] md:h-[90vh] overflow-x-hidden overflow-y-auto md:mx-6 xl:mx-24">
+      className="bg-base-100 h-[100vh] overflow-x-hidden overflow-y-auto md:mx-6 xl:mx-24">
        
       {pinDetail && (
         <div className="flex flex-col w-full md:px-4">
@@ -91,7 +93,7 @@ const PinDetailsModal = (props) => {
                         </div>
           </a>
               </Link>
-                <div className='text-right md:text-left flex-1'>
+                <div className='text-left flex-1'>
                   {moreDetails &&
                     <FollowUser userFollowers={moreDetails.postedBy.followers} id={pinDetail.postedBy._id} userId={session?.user.id}/>
                   }
@@ -103,11 +105,11 @@ const PinDetailsModal = (props) => {
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
 </svg>
         </button>
-            </div>
+              </div>
             <div className='hidden md:flex btn-group  relative'>
                 <button className='btn btn-outline p-2 px-3 border-2 hover:bg-red-500 text-lg' onClick={() => { likePin(pinDetail._id) }}>
                   <span className='mr-2'>
-                    {pinDetail?.likes ? pinDetail.likes.length : 0}
+                    {moreDetails?.likes ? moreDetails.likes.length : 0}
                   </span>
                   {alreadyLiked.length > 0 ? 
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
@@ -117,9 +119,15 @@ const PinDetailsModal = (props) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>}
                 </button>
-              
-             <CollectionCreation userId = {session?.user.id} pinId = {pinDetail._id}/>
-                  <a
+                <CollectionCreation
+                  imageUrl= {pinDetail.image.asset.url}
+                  setShowLoginModal={setShowLoginModal}
+                  setloginImage={setloginImage}
+                  pinTitle= {pinDetail.title}
+                  setLoginMessage={setLoginMessage}
+                  userId={session?.user.id}
+                  pinId={pinDetail._id} />
+               <a
                 href={`${pinDetail.image?.asset.url}?dl=`}
                 download
                 className="btn btn-outline border-2 p-2 "
@@ -131,10 +139,9 @@ const PinDetailsModal = (props) => {
             </div>
                 
             </div>
-            <div className='h-[68vh]'>
-      
+            <div className=''>
           <img
-              className="mx-auto h-full object-cover"
+              className="w-full max-h-[70vh] object-contain"
               src={(pinDetail?.image && urlFor(pinDetail?.image).url())}
               alt="user-post"
               />
@@ -147,19 +154,21 @@ const PinDetailsModal = (props) => {
               <p className="mt-2 text-[#a7a9be] font-semibold text-sm md:text-md">{moreDetails?.about}</p>
               </div>
               <div className='flex block md:hidden btn-group mx-auto relative'>
-                <button className='btn btn-outline p-2 hover:bg-red-500 text-lg' onClick={() => { likePin(pinDetail._id) }}>
-                  <span className='mr-2'>
-                    {pinDetail?.likes ? pinDetail.likes.length : 0}
-                  </span>
-                  {alreadyLiked.length > 0 ? 
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                    </svg> : 
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>}
-                </button>
-                <CollectionCreation userId = {session?.user.id} pinId= {pinDetail._id}/>
+                <LikePin
+                  likes={moreDetails?.likes}
+                  pinId={pinDetail._id}
+                  setLoginMessage={setLoginMessage}
+                  setShowLoginModal={setShowLoginModal}
+                  setloginImage={setloginImage}
+                  userId={session?.user.id} />
+                <CollectionCreation
+                  imageUrl= {pinDetail.image.asset.url}
+                  setShowLoginModal={setShowLoginModal}
+                  setloginImage={setloginImage}
+                  pinTitle= {pinDetail.title}
+                  setLoginMessage={setLoginMessage}
+                  userId={session?.user.id}
+                  pinId={pinDetail._id} />
                   <a
                 href={`${pinDetail.image?.asset.url}?dl=`}
                 download

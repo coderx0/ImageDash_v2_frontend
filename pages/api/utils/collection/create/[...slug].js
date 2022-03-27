@@ -10,6 +10,7 @@ export default async function handler(req, res) {
         _type: 'pinCollection',
         title,
         userId: uid,
+        isPrivate:false,
         postedBy: {
             _type: 'postedBy',
             _ref: uid,

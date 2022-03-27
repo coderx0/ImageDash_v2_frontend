@@ -6,10 +6,11 @@ import Lottie from "lottie-react";
 import loadingSpinner from "../public/loading.json";
 import { BsFillCloudUploadFill } from 'react-icons/bs';
 
-const ImageUploader = ({imageAsset,setImageAsset,profilePage}) => {
+const ImageUploader = ({setImageAsset,profilePage}) => {
     const [loading, setLoading] = useState(false);
     const [wrongImageType, setWrongImageType] = useState(false);
-    
+  const [image, setImage] = useState(null);
+  
     const uploadImage = async (e) => {
         const selectedFile = e.target.files[0];
         const formData = new FormData();
@@ -25,6 +26,7 @@ const ImageUploader = ({imageAsset,setImageAsset,profilePage}) => {
           const response = await axios.post('/api/utils/upload/uploadImage', formData, config);
          
           setImageAsset(response.data);
+          setImage(response.data);
           setLoading(false);
         } else {
           setLoading(false);
@@ -34,7 +36,7 @@ const ImageUploader = ({imageAsset,setImageAsset,profilePage}) => {
     
   return (
           <div className={profilePage ? `bg-stone-900 flex h-48`:"bg-stone-900 p-2 flex w-full"}>
-          <div className={`flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full ${profilePage?'m-2':'m-6 h-96'}`}>
+          <div className={`relative flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full ${profilePage?'m-2':'m-6 h-96'}`}>
             {loading && (
                 <Lottie
                         className="h-[70vh]"
@@ -43,10 +45,10 @@ const ImageUploader = ({imageAsset,setImageAsset,profilePage}) => {
             )}
             {
               wrongImageType && (
-                <p className='text-red-400 font-semibold text-xl'>wrong file type !</p>
+                <p className='absolute top-0 text-red-400 font-semibold text-lg'>wrong file type !</p>
               )
             }
-            {(!imageAsset && !loading) && (
+            {(!image && !loading) && (
               <label>
                 <div className="flex flex-col items-center justify-center h-full">
                   <div className={`animate-pulse flex flex-col mt-12 justify-center items-center`}>
@@ -68,17 +70,20 @@ const ImageUploader = ({imageAsset,setImageAsset,profilePage}) => {
                 />
                 </label>
         )}
-        {(imageAsset) && (
+        {(image) && (
               <div className="relative h-full">
                 <img
-                  src={imageAsset?.url}
+                  src={image?.url}
                   alt="uploaded-pic"
                   className="h-full w-full object-cover"
                 />
                 <button
                   type="button"
                   className="absolute bottom-3 right-3 p-3 rounded-full btn btn-error text-2xl cursor-pointer"
-                  onClick={() => setImageAsset(null)}
+              onClick={() => {
+                setImage(null);
+                setImageAsset(null)
+              }}
                 >
                   <MdDelete />
                 </button>

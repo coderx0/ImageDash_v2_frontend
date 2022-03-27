@@ -3,9 +3,9 @@ import { userCreatedPinsQuery } from "../../../../lib/Data";
 
 export default async function handler(req, res) {
     
-    const { userId } = req.query;
+    const { uId } = req.query;
     
-    const createdPinsQuery = userCreatedPinsQuery(userId);
+    const createdPinsQuery = userCreatedPinsQuery(uId);
 
     const data = await client.fetch(createdPinsQuery);
 

@@ -11,13 +11,14 @@ const breakPointObj = {
 }
 
 const CollectionFeed = ({ viewPage, collections }) => {
-  let showableCollections;
-  if (viewPage === 'profile')
-    showableCollections = collections
-  else
-     showableCollections = collections.filter(collection =>
-        collection?.pins?.length > 0);
+  let showableCollections = collections;
+  // if (viewPage === 'profile')
+  //   showableCollections = collections
+  // else
+  //    showableCollections = collections.filter(collection =>
+  //       collection?.pins?.length > 0);
     
+
   return (
            <Masonry
                 className="px-2 md:px-4 pt-8 flex gap-4"
@@ -29,17 +30,17 @@ const CollectionFeed = ({ viewPage, collections }) => {
                           key={collection._id}>
                           <Link href={`/collectionDetails/${collection._id}`}>
                               <a>
-                          <div className='overflow-hidden'>
+                        {collection.pins && <div className='overflow-hidden'>
                             <img
-                                  src={collection.pins[0]?.item.image?.asset.url}
+                                  src={collection?.pins[0]?.item.image?.asset.url}
                               alt={collection.pins[0]?.item.title}
                              
                                 className='hover:scale-125 transition duration-1000 object-cover'
                               />
                              
-                          </div>
+                          </div>}
                           {
-                            collection.pins[0]  && <div className='flex'>
+                            collection.pins  && <div className='flex'>
                       {collection.pins.map((pin,idx) =>
                           (idx<4 && <div className='border-2 relative h-20 w-24' key={pin._key}>
                           <Image

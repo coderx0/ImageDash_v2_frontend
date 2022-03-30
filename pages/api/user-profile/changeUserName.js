@@ -15,14 +15,14 @@ async function handler(req, res) {
   const response = await client.fetch(query);
 
   if (response.length === 0) {
+    
     const updateResponse = await client.patch(userId)
       .set({ userName: newUserName })
       .commit();
-    console.log(updateResponse);
-    res.status(200).json({ message: "username chnaged" });
+    res.status(200).json({ message: updateResponse.userName });
 
   } else {
-    res.status(200).json({ message: "User name already exists" });
+    res.status(200).json({ error: "User name already exists" });
  }
 
 }

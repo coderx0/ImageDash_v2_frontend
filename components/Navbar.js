@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { AiOutlineMenu } from "react-icons/ai";
 import Image from "next/image";
 import Sidebar from "./Sidebar";
+import { AiOutlineSearch } from "react-icons/ai"
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -26,7 +27,7 @@ const Navbar = () => {
             }
             setUserData(data.sanityData)
           });  
-  }, [session?.user?.id]);
+  }, [session?.user.id]);
 
   useEffect(() => {
     setTimeout(() => setAuthAlert(null), 6000);
@@ -61,20 +62,18 @@ const Navbar = () => {
               placeholder="search for images"
               className="input input-bordered w-full" />
             <button className="bg-base-100 my-1 mr-1 absolute right-0 p-2 rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-</svg>
+          <AiOutlineSearch className="h-6 w-6"/>
             </button>
           </form>
 
           {userData &&
-            <div className="mx-1 relative dropdown dropdown-hover">
-              <div className="" tabIndex="0">
-                <img src={userData.image}
-                  height={40}
-                  width={40}
-                  className="inline-block h-9 w-9 md:h-11 md:w-11 object-cover rounded-full border-2"
-                  alt="up" />
+            <div className="mx-1 relative dropdown">
+              <div className="mt-1" tabIndex="0">
+                <Image src={userData.image}
+                  height={50}
+                  width={50}
+                  className="object-cover rounded-full"
+                  alt={userData.username} />
               </div>
               <ul tabIndex="0" className="flex flex-col items-end p-4 text-[15px] dropdown-content bg-stone-800 rounded-box w-48 absolute top-15 right-0">
               <li className="flex w-full p-1 justify-around border-b-2"><img src={userData.image} alt={userData.userName} className="h-12 w-12 border-2 object-cover rounded-full inline-block"/>

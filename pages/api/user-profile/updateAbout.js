@@ -11,10 +11,10 @@ async function handler(req, res) {
   const response = await client.patch(userId).set({about:about}).commit();
 
   if (response) {
-    res.status(200).json({ message: "about updated" });
+    res.status(200).json({ message: response.about });
 
   } else {
-    res.status(200).json({ message: "User name already exists" });
+    res.status(200).json({ error: "Something error happened" });
  }
 
 }

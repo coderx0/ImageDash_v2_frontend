@@ -5,9 +5,10 @@ import CollectionFeed from '../components/CollectionFeed';
 
 const Collections = ({collectionsData}) => {
   return (
-      <div>
+      <>
+      <h1 className='text-center text-xl pt-2 font-bold'>Collections</h1>
           <CollectionFeed collections={collectionsData}/>
-    </div>
+    </>
   )
 }
 

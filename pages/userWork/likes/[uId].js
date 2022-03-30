@@ -28,9 +28,8 @@ const UserLikes = () => {
 
     return (
       <>
-        <h1>
-          Liked Images
-        </h1>
+        <h1 className='text-center text-xl pt-2 font-bold'>Liked Images</h1>
+
          <Feed pins={data?.pins}/>
      </>
     )

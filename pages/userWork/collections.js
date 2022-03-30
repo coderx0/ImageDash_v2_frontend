@@ -25,8 +25,11 @@ const UserCollections = () => {
     if (!data.collections)
         return <Boring />
     
-      return (
+    return (
+        <>
+              <h1 className='text-center text-xl pt-2 font-bold'>My Collections</h1>
  <CollectionFeed viewPage='profile' collections={data.collections}/>
+      </>
   )
 }
 

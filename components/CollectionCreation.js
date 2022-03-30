@@ -76,8 +76,8 @@ const CollectionCreation = ({ userId,pinId,setShowLoginModal,setloginImage,pinTi
                   className="pb-4 px-2 flex gap-2">
               <input type="text" ref={collectionInputRef}
                 placeholder="collection name"
-                className="input input-bordered border-2 bg-stone-900 w-48 md:flex-1" />
-            {!isLoading && <button className='btn btn-success w-24 text-sm md:text-md px-2 font-bold'>
+                className="input input-bordered border-2 bg-stone-900 w-48 sm:flex-1 md:flex-1" />
+            {!isLoading && <button className='btn btn-success w-24 sm:w-36 text-sm md:text-md px-2 font-bold'>
                 Create New
               </button>}
               {

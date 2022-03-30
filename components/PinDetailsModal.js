@@ -9,12 +9,10 @@ import Comment from './Comment';
 import LoginModal from './LoginModal';
 import LikePin from './LikePin';
 
-
 const breakPointObj = {
   default: 2,
    500:1
 }
-
 
 const PinDetailsModal = (props) => {
   
@@ -141,7 +139,7 @@ const PinDetailsModal = (props) => {
             </div>
             <div className=''>
           <img
-              className="w-full max-h-[70vh] object-contain"
+              className="w-full max-h-[80vh] object-contain"
               src={(pinDetail?.image && urlFor(pinDetail?.image).url())}
               alt="user-post"
               />

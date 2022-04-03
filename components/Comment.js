@@ -1,6 +1,7 @@
 import React,{useState} from 'react'
 import Link from 'next/link';
 import Image from "next/image";
+import defaultProfile from "../public/images/defaultProfile.png"
 
 const Comment = ({session,pinId,setMoreDetails,comments}) => {
     const [comment, setComment] = useState('');
@@ -22,13 +23,13 @@ const Comment = ({session,pinId,setMoreDetails,comments}) => {
     <div className='md:w-[40%] md:pr-4'>
       <h2 className="mt-5 text-2xl font-bold ">Comments</h2>
       
-      <div className="h-[40vh] md:h-[auto] overflow-y-auto">
+      <div className="max-h-[40vh] md:max-h-full overflow-y-auto">
         {comments?.map((item) => (
           <div className=" my-4 mx-2 relative overflow-visible rounded-box" key={item.comment}>
             <div className='flex gap-4'>
             <div className='w-22'>
             <Image
-                src={item.postedBy?.image}
+                src={item?.postedBy?.image}
                 height={45}
                 width={45}
               className=" object-cover rounded-full cursor-pointer"
@@ -52,7 +53,7 @@ const Comment = ({session,pinId,setMoreDetails,comments}) => {
           <Image
             width={44}
             height={44}
-              src={session?.user.image}
+              src={session? session.user.image : defaultProfile}
               className="rounded-full object-cover cursor-pointer"
               alt="user-profile" />
          </a>

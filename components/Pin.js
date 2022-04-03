@@ -36,6 +36,8 @@ const Pin = ({ pin,userId,setShowPinModal,setShowLoginModal,setLoginMessage,setL
             <img
               onClick={showPin}
               src={image?.asset.url}
+              height={500}
+              width={500}
               className="w-full h-full object-cover hover:scale-125 transition duration-1000"
               alt="user-post" 
               />
@@ -46,7 +48,7 @@ const Pin = ({ pin,userId,setShowPinModal,setShowLoginModal,setLoginMessage,setL
             <div
                 className="absolute font-semibold top-0 right-0 left-0 pr-2 p-2 bg-gradient-to-b from-slate-900" >
             <img src={postedBy.image} className="ml-1 object-cover cursor-pointer rounded-full w-8 h-8 inline-block" onClick={()=>{router.push(`/user-profile/${postedBy._id}`)}}/>
-            <span className="ml-2 sm:text-sm md:text-md lg:text-lg cursor-pointer" onClick={()=>{router.push(`/user-profile/${postedBy._id}`)}}>
+            <span className="ml-2 sm:text-sm md:text-md cursor-pointer" onClick={()=>{router.push(`/user-profile/${postedBy._id}`)}}>
               {postedBy.userName}
             </span>
         </div>

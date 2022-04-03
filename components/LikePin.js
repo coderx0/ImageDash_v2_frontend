@@ -3,7 +3,7 @@ import { BsFillHeartFill,BsHeart } from "react-icons/bs";
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
 
-const LikePin = ({ likes, pinId, userId,setShowLoginModal,setloginImage,setLoginMessage}) => {
+const LikePin = ({ likes, pinId,pinTitle, userId,setShowLoginModal,setloginImage,setLoginMessage,imageUrl}) => {
     const [likingPost, setLikingPost] = useState(false);
     const [pinLikes, setPinLikes] = useState(null);
 
@@ -23,8 +23,8 @@ const LikePin = ({ likes, pinId, userId,setShowLoginModal,setloginImage,setLogin
         }
       } else {
         setShowLoginModal(true);
-        setloginImage(pinDetail.image.asset.url);
-        setLoginMessage(`Login to like the image '${pinDetail.title}'`);
+        setloginImage(imageUrl);
+        setLoginMessage(`Login to like the image '${pinTitle}'`);
       }
     
     };

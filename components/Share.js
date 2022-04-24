@@ -5,9 +5,9 @@ import { LinkedinShareButton, TwitterShareButton, RedditShareButton, FacebookSha
 import { RedditIcon,FacebookIcon,LinkedinIcon,TwitterIcon,EmailIcon,PinterestIcon } from "react-share";
 
 const Share = ({ title, id, imageUrl,setShowShareModal }) => {
-    console.log(title);
+
     const [isCopied, setIsCopied] = useState(false);
-    const sharingURL = `http://localhost:3000/pindetails/${id}`;
+    const sharingURL = `https://image-dash-v2-frontend.vercel.app/pindetails/${id}`;
     const iconClass = `rounded-full h-12 w-12 md:h-16 md:w-16 hover:scale-125`;
   return (
       <>

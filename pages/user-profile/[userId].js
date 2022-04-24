@@ -8,8 +8,6 @@ import Feed from "../../components/Feed";
 import Link from 'next/link';
 import CollectionFeed from '../../components/CollectionFeed';
 import Image from 'next/image';
-import ImageUploader from '../../components/ImageUploader';
-import axios from 'axios';
 import FollowUser from '../../components/FollowUser';
 import UserSettings from '../../components/UserSettings';
 
@@ -29,16 +27,10 @@ const UserProfile = ({ user: userData }) => {
 
   const [pins, setPins] = useState();
   const [text, setText] = useState('images');
-  // const [isUserNameUpdating, setIsUserNameUpdating] = useState(false);
   const [activeBtn, setActiveBtn] = useState('images');
   const [uploadCount, setUploadCount] = useState(0);
   const [followers, setFollowers] = useState([]);
   const [collections, setCollections] = useState([]);
-  // const [imageAsset, setImageAsset] = useState(null);
-  // const [isBannerUploading, setIsBannerUploading] = useState(false);
-  // const [isProfilePicUploading, setIsProfilePicUploading] = useState(false);
-  // const userNameRef = useRef();
-  // const aboutRef = useRef();
 
   const router = useRouter();
 
@@ -80,62 +72,10 @@ const UserProfile = ({ user: userData }) => {
         setUploadCount(data?.pins?.length);
       });
     }
-  },[userId])
-
-  // const changeUserName = async() => {
-  //   const newUserName = userNameRef.current.value;
-  //   if (newUserName.trim().length>0)
-  //   {
-  //     setIsUserNameUpdating(true);
-  //     const response = await axios.post('/api/user-profile/changeUserName', {
-  //       userId: session.user.id,
-  //       newUserName
-  //     });
-      
-  //   setUser(prev => ({ ...prev, userName: response.data.message }));
-  //     userNameRef.current.value = '';
-  //     setIsUserNameUpdating(false);
-  //   }
+  }, [userId])
   
-  // };
-  // const updateAbout = async() => {
-  //   const about = aboutRef.current.value;
-  //   const response = await axios.post('/api/user-profile/updateAbout', {
-  //     userId: session.user.id,
-  //     about
-  //   });
-  
-  //   console.log(response.data.message);
-  // };
-  // const updateProfilePic = async () => {
-  //   if (imageAsset)
-  //   {
-  //     setIsProfilePicUploading(true);
-  //     const response = await axios.post('/api/user-profile/updateProfilePic', {
-  //       userId: session.user.id,
-  //       imageUrl:imageAsset.url
-  //     });
-  //     setUser(prev=>({...prev,image:response.data.image}));
-  //     setIsProfilePicUploading(false);
-  //   }  
-  // };
-
-  // const updateBannerPic = async () => {
-  //   if (imageAsset)
-  //   {
-  //     setIsBannerUploading(true);
-  //     const response = await axios.post('/api/user-profile/updateBannerImage', {
-  //       userId: session.user.id,
-  //       imageUrl:imageAsset.url
-  //     });
-  //     setUser((prev)=>({...prev,bannerImage:response.data.bannerImage}))
-  //     setIsBannerUploading(false);
-  //   }  
-  // };
-
-
   const showOption = session ? session.user.id === userId ? true : false : false;
-
+  
   if (!user) return <h1>Loading Profile</h1>;
   return (
     <Layout>
@@ -183,7 +123,7 @@ const UserProfile = ({ user: userData }) => {
           </div>
         </div>
          
-          <div className="sm:mx-auto whitespace-nowrap overflow-y-hidden overflow-x-auto sticky top-16 ">
+          <div className="sm:mx-auto whitespace-nowrap overflow-y-hidden overflow-x-auto ">
           <button
             type="button"
             onClick={(e) => {
@@ -232,10 +172,16 @@ const UserProfile = ({ user: userData }) => {
    
           {
             (text === 'images' || text === 'saved') &&
-              (pins?.length === 0 ?
+              (!pins ?
                 (
-        <div className="flex justify-center font-bold items-center w-full text-1xl mt-2">
-          No Pins Found!
+        <div className="flex flex-col gap-4 justify-center font-bold items-center w-full text-1xl mt-2">
+                  <span className='mt-4 font-normal'>
+                  No Images Uploaded Yet.
+                  </span>
+                  <Link href='/createPin'>
+      <a className='btn btn-info'>
+      Upload
+    </a></Link>
         </div>
                 ) :
                 <div className="px-2">
@@ -250,7 +196,10 @@ const UserProfile = ({ user: userData }) => {
           }
 
           {
-            text==='followers' && <div className='flex justify-center gap-4 flex-wrap mx-2 mt-4'>
+            text === 'followers' && <div className='flex justify-center gap-4 flex-wrap mx-2 mt-4'>
+              {
+                !followers && <h1>No Followers Yet</h1>
+              }
                   {followers?.map(follower =>
                     <div
                        key={follower.followedBy._id}
@@ -280,7 +229,10 @@ const UserProfile = ({ user: userData }) => {
 
           {
             text === 'following' && <div className='flex justify-center gap-4 flex-wrap mx-2 mt-4'>
-                  {followers?.map(follower =>
+            {
+                !followers && <h1>Not Following anyone yet</h1>
+              }    
+              {followers?.map(follower =>
                     <div
                        key={follower.following?._id}
                       className="flex flex-col w-40 border-2 bg-slate-900 rounded-box">

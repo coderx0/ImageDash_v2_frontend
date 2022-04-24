@@ -49,7 +49,7 @@ const CollectionCreation = ({ userId,pinId,setShowLoginModal,setloginImage,pinTi
     
   return (
       <>
-           <button className='btn btn-outline p-2 hover:bg-sky-600'
+           <button className='btn p-2 hover:bg-sky-600'
                   onClick={collectionModal}>
         <BiImageAdd className='w-5 h-5'/>
         <span className='mx-2'>Collect</span>

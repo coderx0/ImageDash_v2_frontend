@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { urlFor } from '../lib/sanityClient';
 import Masonry from "react-masonry-css";
 import Link from 'next/link';
@@ -43,23 +43,7 @@ const PinDetailsModal = (props) => {
   moreDetails?.likes?.filter((item) => item?.likedBy?._id === session?.user?.id);
   alreadyLiked = alreadyLiked?.length > 0 ? alreadyLiked : [];
 
-  const likePin = (id) => {
-    if (session) {
-      if (alreadyLiked?.length === 0) {
-        setLikingPost(true);
-        fetch(`/api/utils/like/image_${id}/user_${session.user.id}`).then((response) => response.json()).then((data) => {
-          setPinLikes(data.message);
-          setLikingPost(false);
-        });
-      }
-    } else {
-      setShowLoginModal(true);
-      setloginImage(pinDetail.image.asset.url);
-      setLoginMessage(`Login to like the image '${pinDetail.title}'`);
-    }
-  
-  };
-
+ 
   const closeModal = (e) => {
       if (e.target.id === "pinBackdrop") {
           setShowPinModal(null);
@@ -73,7 +57,13 @@ const PinDetailsModal = (props) => {
         loginImage={loginImage}
         loginMessage={loginMessage}
           setShowLoginModal={setShowLoginModal} />}
-      
+        <button
+          onClick={()=>setShowPinModal(null)}
+          className='btn btn-rounded-none mb-1 text-lg font-bold absolute top-0 right-0 z-20'>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+</svg>
+        </button>
       <div
         id="pinModal"
       className="bg-base-100 h-[100vh] overflow-x-hidden overflow-y-auto md:mx-6 xl:mx-24">
@@ -96,13 +86,7 @@ const PinDetailsModal = (props) => {
                     <FollowUser userFollowers={moreDetails.postedBy.followers} id={pinDetail.postedBy._id} userId={session?.user.id}/>
                   }
                 </div>
-                <button
-          onClick={()=>setShowPinModal(null)}
-          className='md:hidden btn btn- rounded-none mb-1 text-lg font-bold'>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-</svg>
-        </button>
+                
               </div>
             <div className='hidden md:flex btn-group  relative'>
             <LikePin
@@ -126,12 +110,12 @@ const PinDetailsModal = (props) => {
                <a
                 href={`${pinDetail.image?.asset.url}?dl=`}
                 download
-                className="btn btn-outline border-2 p-2 "
+                className="btn p-2 "
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
 </svg>
-              </a>
+                </a>
             </div>
                 
             </div>
@@ -171,7 +155,7 @@ const PinDetailsModal = (props) => {
                   <a
                 href={`${pinDetail.image?.asset.url}?dl=`}
                 download
-                className="btn btn-outline p-2 "
+                className="btn p-2 "
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

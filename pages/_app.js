@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
 import Navbar from '../components/Navbar'
 import { motion, AnimatePresence } from 'framer-motion'
+import NextNProgress from "nextjs-progressbar";
 
 function MyApp({
   Component,router,pageProps: {session, ...pageProps } }) {
@@ -11,6 +12,7 @@ function MyApp({
   return <SessionProvider session={session}>
     
     <Navbar />
+    <NextNProgress/>
     <AnimatePresence
       exitBeforeEnter
       initial={false}

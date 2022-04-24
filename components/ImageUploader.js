@@ -35,7 +35,7 @@ const ImageUploader = ({setImageAsset,profilePage}) => {
     };
     
   return (
-          <div className={profilePage ? `bg-stone-900 flex h-48`:"bg-stone-900 p-2 flex w-full"}>
+          <div className={profilePage ? `bg-stone-900 flex h-64`:"bg-stone-900 p-2 flex w-full"}>
           <div className={`relative flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full ${profilePage?'m-2':'m-6 h-96'}`}>
             {loading && (
                 <Lottie
@@ -71,7 +71,7 @@ const ImageUploader = ({setImageAsset,profilePage}) => {
                 </label>
         )}
         {(image) && (
-              <div className="relative h-full">
+              <div className="relative h-full w-[90%]">
                 <img
                   src={image?.url}
                   alt="uploaded-pic"

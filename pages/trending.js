@@ -5,13 +5,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const Trending = ({ topPins,topUsers }) => {
-  console.log(topUsers);
 
   return (
       <>
-          <h1 className='text-center mt-4'>Top Pins</h1>
+          <h1 className='text-center mt-4 text-xl font-bold'>Top Pins</h1>
+      <div className='flex justify-center'>
       <Feed pins={topPins} />
-      <h1 className='text-center text-xl my-4'>Top Uploaders</h1>
+      </div>
+      <h1 className='text-center text-xl font-bold my-4'>Top Uploaders</h1>
     <div className='flex justify-center'>
     <div className='flex flex-wrap justify-center gap-4 p-4'>
         {
@@ -92,7 +93,7 @@ export async function getStaticProps() {
                 _id,
               },
             },
-          }[0...3]`;
+          }[0...4]`;
           const trendingUserQuery = `*[_type == "user" && uploads!=null] | order(count(uploads) desc) {
             image,
             _id,

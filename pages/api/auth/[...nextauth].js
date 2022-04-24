@@ -17,6 +17,7 @@ export default NextAuth({
       // Send properties to the client, like an access_token from a provider.
       session.user.id = token.sub;
       return session;
+
     },
   },
   providers: [
@@ -26,27 +27,6 @@ export default NextAuth({
     }),
     CredentialsProvider({
       async authorize(credentials, req) {
-        // if (credentials.type === 'new_user') {
-        //   const doc = {
-        //     _id:credentials.id,
-        //     _type:'user',
-        //     userName: credentials.userName,
-        //     image: 'https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-man-default-avatar-png-image_2813122.jpg',
-        //     email: credentials.email,
-        //   };
-          
-        //   const user = await client.createIfNotExists(doc);
-
-        //   return {
-        //     id:user._id,
-        //     name: user.userName,
-        //     email: user.email,
-        //     image: user.image
-        //   };
-          
-        // }
-        // else {
-
         const query = `*[_type == "user" && email == '${credentials.email}']{
           userName,
           password,
@@ -63,7 +43,6 @@ export default NextAuth({
             credentials.password,
             userData[0].password
           );
-          // const isValid = credentials.password === userData[0].password;
   
           if (!isValid) {
             throw new Error('Wrong Password!');
@@ -75,7 +54,7 @@ export default NextAuth({
           email: userData[0].email,
           image: userData[0].image
         };
-          // }
+        
       }
         })
       ]

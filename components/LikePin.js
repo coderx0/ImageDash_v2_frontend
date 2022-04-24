@@ -30,15 +30,15 @@ const LikePin = ({ likes, pinId,pinTitle, userId,setShowLoginModal,setloginImage
     };
   return (
       <button
-          className='btn btn-outline px-3 border-2 hover:bg-red-500 text-lg flex items-center '
+          className='btn px-3 border-2 hover:bg-red-500 text-lg flex items-center '
           onClick={likePin}>
-    <span className='mr-2'>
+    <span className='mb-1 pr-2'>
       {pinLikes?pinLikes.length: likes?likes.length : <p></p>}
-          </span>
+    </span>
           {likingPost &&  <UseAnimations animation={loading} size={26} style={{ padding: 100,color:'white' }} />}
     {!likingPost && (alreadyLiked.length > 0 ? 
-      <BsFillHeartFill/> : 
-      <BsHeart/>)}
+      <BsFillHeartFill className='h-4 w-4'/> : 
+      <BsHeart className='h-4 w-4'/>)}
   </button>
   )
 }

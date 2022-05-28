@@ -10,6 +10,7 @@ import CollectionFeed from '../../components/CollectionFeed';
 import Image from 'next/image';
 import FollowUser from '../../components/FollowUser';
 import UserSettings from '../../components/UserSettings';
+import LoginModal from '../../components/LoginModal';
 
 const breakPointObj = {
   default: 4,
@@ -31,6 +32,8 @@ const UserProfile = ({ user: userData }) => {
   const [uploadCount, setUploadCount] = useState(0);
   const [followers, setFollowers] = useState([]);
   const [collections, setCollections] = useState([]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginMessage, setLoginMessage] = useState('');
 
   const router = useRouter();
 
@@ -79,6 +82,11 @@ const UserProfile = ({ user: userData }) => {
   if (!user) return <h1>Loading Profile</h1>;
   return (
     <Layout>
+         {showLoginModal &&
+        <LoginModal
+        loginMessage={loginMessage}
+          setShowLoginModal={setShowLoginModal} />}
+      
       <div className="relative pb-2 h-full justify-center items-center">
       <div className="flex flex-col pb-5">
         <div className="relative flex flex-col mb-7">
@@ -107,7 +115,13 @@ const UserProfile = ({ user: userData }) => {
                   <p className='text-[12px] md:text-sm'>{user.about}</p>
             </div>
             </div>
-              <FollowUser userFollowers ={user.followers} id={user._id} userId={session?.user.id}/>
+              <FollowUser
+                userFollowers={user.followers}
+                id={user._id}
+                userId={session?.user.id} 
+                  setLoginMessage={setLoginMessage}
+                  setShowLoginModal={setShowLoginModal}
+                />
             </div>
           
           <div className="absolute top-0 z-1 right-0 p-2">
@@ -173,6 +187,8 @@ const UserProfile = ({ user: userData }) => {
           {
             (text === 'images' || text === 'saved') &&
               (!pins ?
+              session ?
+                session.user.id === userId ?
                 (
         <div className="flex flex-col gap-4 justify-center font-bold items-center w-full text-1xl mt-2">
                   <span className='mt-4 font-normal'>
@@ -183,7 +199,10 @@ const UserProfile = ({ user: userData }) => {
       Upload
     </a></Link>
         </div>
-                ) :
+                  )
+                  : <h1 className='text-center m-6'>User has not uploaded any Image yet.</h1>
+                :<h1 className='text-center m-6'>User has not uploaded any Image yet.</h1>
+                :
                 <div className="px-2">
             <Feed pins={pins}/>
                 </div>)

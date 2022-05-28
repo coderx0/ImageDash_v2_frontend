@@ -57,6 +57,7 @@ const PinDetailsModal = (props) => {
         loginImage={loginImage}
         loginMessage={loginMessage}
           setShowLoginModal={setShowLoginModal} />}
+      
         <button
           onClick={()=>setShowPinModal(null)}
           className='btn btn-rounded-none mb-1 text-lg font-bold absolute top-0 right-0 z-20'>
@@ -83,7 +84,15 @@ const PinDetailsModal = (props) => {
               </Link>
                 <div className='text-left flex-1'>
                   {moreDetails &&
-                    <FollowUser userFollowers={moreDetails.postedBy.followers} id={pinDetail.postedBy._id} userId={session?.user.id}/>
+                    <FollowUser
+                    userFollowers={moreDetails.postedBy.followers}
+                    id={pinDetail.postedBy._id}
+                    userId={session?.user.id}
+                    setloginImage={setloginImage}
+                  setLoginMessage={setLoginMessage}
+                  setShowLoginModal={setShowLoginModal}
+                  imageUrl={pinDetail.image.asset.url}
+                 />
                   }
                 </div>
                 

@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 
-const FollowUser = ({userFollowers,id,userId}) => {
+const FollowUser = ({userFollowers,id,userId,setLoginMessage,setloginImage,setShowLoginModal,imageUrl}) => {
     const [loading, setLoading] = useState(false);
     const [followers, setFollowers] = useState(userFollowers);
     const [followSuccess, setFollowSuccess] = useState(false);
@@ -19,7 +19,12 @@ const FollowUser = ({userFollowers,id,userId}) => {
          }
           setLoading(false); 
         }
-      } 
+      }
+      else {
+        setShowLoginModal(true);
+        if(imageUrl)setloginImage(imageUrl);
+        setLoginMessage(`Login to follow.`);
+      }
     }
 
   return (

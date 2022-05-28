@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import toast, { Toaster } from 'react-hot-toast';
+import Link from "next/link";
 
 const Auth = () => {
     const userNameRef = useRef();
@@ -174,7 +175,10 @@ const Auth = () => {
 
                         </form>
 
-                        <p className="mt-6 text-sm text-center text-gray-400">Already have an account? <a href="#" className="text-blue-500 focus:outline-none focus:underline hover:underline">Login</a>.</p>
+                                <p className="mt-6 text-md text-center text-gray-400">Already have an account?
+                                    <Link href='/login'>
+                                        <h1 className="text-sky-400">Login</h1>
+                                    </Link></p>
                     </div>
                 </div>
             </div>

@@ -15,7 +15,6 @@ const Feed = ({pins}) => {
 
     const [showPinModal, setShowPinModal] = useState(null);
     const { data: session, status } = useSession();
-
     return (
         <>
             

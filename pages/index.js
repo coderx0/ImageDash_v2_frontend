@@ -1,20 +1,26 @@
 import { cdnClient } from "../lib/sanityClient";
 import { feedQuery } from "../lib/Data";
 import Feed from "../components/Feed";
-import { useSession } from "next-auth/react";
-// import { categories } from "../lib/Data";
-import { useRouter } from "next/router";
-// import TopPins from "../components/TopPins";
-import Image from "next/image";
 
-export default function Home({ pins,topPins,collections }) { 
+import { useState } from "react";
+import InfiniteScroll from 'react-infinite-scroller';
 
-  const { data: session, status } = useSession();
-  const router = useRouter();
+
+export default function Home({ pins }) { 
+
+  const [start, setStart] = useState(8);
+  const [end, setEnd] = useState(16);
+  const [disable, setDisable] = useState(false);
   
-  const searchCategory = (searchTerm) => {
-    router.push(`/search/${searchTerm}`);
-  };
+  const loadmore = async () => {
+    const data = await cdnClient.fetch(feedQuery(start, end));
+    if (data.length < 8)
+      setDisable(true);
+    
+    pins.push(...data);
+    setStart(prev => prev + 8);
+    setEnd(prev => prev + 8);
+}
 
   return (
   <>
@@ -26,15 +32,29 @@ export default function Home({ pins,topPins,collections }) {
           </div>
       </div>
       
-        <Feed pins={pins} />
-       
+      
+      <InfiniteScroll
+    pageStart={0}
+    loadMore={loadmore}
+    hasMore={!disable}
+    loader={<div className="loader" key={0}>Loading ...</div>}
+>
+       <Feed pins={pins} />
+        
+      </InfiniteScroll>
+      
+      {/* {!disable && <div className="flex justify-center">
+      <button className="btn btn-info"
+      onClick={loadmore}
+      >Load more</button>
+     </div>} */}
     </>
   )
 }
 
 export async function getStaticProps() {
     
-  const data = await cdnClient.fetch(feedQuery);
+  const data = await cdnClient.fetch(feedQuery(0,8));
 
   return {
       props: {

@@ -7,7 +7,7 @@ import { RedditIcon,FacebookIcon,LinkedinIcon,TwitterIcon,EmailIcon,PinterestIco
 const Share = ({ title, id, imageUrl,setShowShareModal }) => {
 
     const [isCopied, setIsCopied] = useState(false);
-    const sharingURL = `https://image-dash-v2-frontend.vercel.app/pindetails/${id}`;
+    const sharingURL = `https://imagedash.vercel.app/pindetails/${id}`;
     const iconClass = `rounded-full h-12 w-12 md:h-16 md:w-16 hover:scale-125`;
   return (
       <>

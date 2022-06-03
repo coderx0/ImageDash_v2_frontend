@@ -6,6 +6,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import Image from "next/image";
 import Sidebar from "./Sidebar";
 import { AiOutlineSearch } from "react-icons/ai"
+import toast, { Toaster } from 'react-hot-toast';
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -14,9 +15,78 @@ const Navbar = () => {
   const searchInputRef = useRef();
   const [sideBar, setSideBar] = useState(false);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  
+  console.log(session);
 
   useEffect(() => {
       if(session?.user?.id)
+      {
+        if (localStorage.getItem('authType') === 'signup') {
+          if (session?.user) {
+            fetch('/api/auth/googleSignup', {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: session.user.email,
+                    userName: session.user.name,
+                    id:session.user.id
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then((response) => response.json())
+                .then(data => {
+                    if (data.errorMessage) {
+                        setLoading(false);
+                        toast.error(data.errorMessage,{
+                            duration: 4000,
+                            position: 'top-right',
+                            // Styling
+                            style: {
+                                background: '#f25f4c',
+                                color: '#fff',
+                                fontWeight:'bold'
+                              },
+                            className: 'bg-red-200',
+                         
+                            // Aria
+                            ariaProps: {
+                              role: 'status',
+                              'aria-live': 'polite',
+                            },
+                          });
+                        // setAuthAlert({type:"error",message:data.errorMessage});
+                        setLoading(false);    
+                    return;
+                    }
+                    if (data.successMessage)
+                    {
+                        toast.success(data.successMessage,{
+                            duration: 4000,
+                            position: 'top-right',
+                            // Styling
+                            style: {
+                                background: '#2ecc71',
+                                color: '#fff',
+                                fontWeight:'bold'
+                                },
+                            className: 'bg-red-200',
+                            
+                            // Aria
+                            ariaProps: {
+                                role: 'status',
+                                'aria-live': 'polite',
+                            },
+                            });
+                        // setAuthAlert({type:"success",message: data.successMessage});
+                        setLoading(false);
+                    }
+                });
+                
+          }
+          localStorage.clear();
+        }
+        else
         fetch(`/api/data/user/${session.user.id}`)
           .then(response => response.json())
           .then(data => {
@@ -26,7 +96,8 @@ const Navbar = () => {
               setAuthAlert("you dont have any account. Please signup");
             }
             setUserData(data.sanityData)
-          });  
+          });
+      } 
   }, [session?.user.id]);
 
   useEffect(() => {

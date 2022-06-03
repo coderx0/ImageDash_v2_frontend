@@ -20,28 +20,6 @@ const CreatePin = ({ user,categories }) => {
   const { data: session, loding } = useSession();
   const router = useRouter();
 
-  // const uploadImage = async (e) => {
-  //   const selectedFile = e.target.files[0];
-  //   const formData = new FormData();
-  //   formData.append(e.target.name,selectedFile);
-
-  //   // uploading asset to sanity
-  //   if (selectedFile.type === 'image/png' || selectedFile.type === 'image/svg' || selectedFile.type === 'image/jpeg' || selectedFile.type === 'image/gif' || selectedFile.type === 'image/tiff') {
-  //     setWrongImageType(false);
-  //     setLoading(true);
-  //     const config = {
-  //       headers: { 'content-type': 'multipart/form-data' }
-  //     };
-  //     const response = await axios.post('/api/utils/upload/uploadImage', formData, config);
-     
-  //     setImageAsset(response.data);
-  //     setLoading(false);
-  //   } else {
-  //     setLoading(false);
-  //     setWrongImageType(true);
-  //   }
-  // };
-
   const savePin = async() => {
     if (title && about && destination && imageAsset?._id && category) {
       const response = await axios.post('/api/utils/upload/saveImage', {

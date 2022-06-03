@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import {signIn,getSession} from "next-auth/react";
+import {signIn,getSession,useSession} from "next-auth/react";
 import { useRouter } from "next/router";
-import { motion } from "framer-motion";
-import Image from "next/image";
 import toast, { Toaster } from 'react-hot-toast';
 import Link from "next/link";
+import { FcGoogle } from 'react-icons/fc';
 
 const Auth = () => {
     const userNameRef = useRef();
     const emailRef = useRef();
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
-    const [loading,setLoading] = useState(false);
-
+    const [loading, setLoading] = useState(false);
+    
     const router = useRouter();
+ 
 
     const submitHandler = async (event) => {
         event.preventDefault();
@@ -25,6 +25,7 @@ const Auth = () => {
         const confirmedPassword = confirmPasswordRef.current.value;
         const enteredUserName = userNameRef.current.value;
 
+       
         if (enteredPassword !== confirmedPassword)
         {
             toast.error('password did not match',{
@@ -120,6 +121,11 @@ const Auth = () => {
         }
         return data;
     }
+
+    const googleSignup = () => {
+        localStorage.setItem('authType', 'signup');
+        signIn('google','http://localhost:3000/authentication');
+    };
     
     return (
         <>
@@ -173,7 +179,17 @@ const Auth = () => {
                                     {loading && <button
                                     className="mt-6 w-full btn btn-info loading"></button>}
 
-                        </form>
+                                </form>
+                                <div
+        onClick={googleSignup}
+        className="flex items-center justify-center mt-4 text-gray-600 transition-colors duration-200 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <div className="px-4 py-2">
+          <FcGoogle className='w-6 h-6' />
+        </div>
+
+        <span className="w-5/6 px-4 py-3 font-bold text-center">
+          Sign up with Google</span>
+      </div>
 
                                 <p className="mt-6 text-md text-center text-gray-400">Already have an account?
                                     <Link href='/login'>

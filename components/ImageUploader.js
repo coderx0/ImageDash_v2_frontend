@@ -17,7 +17,7 @@ const ImageUploader = ({setImageAsset,profilePage}) => {
         formData.append(e.target.name,selectedFile);
     
         // uploading asset to sanity
-        if (selectedFile.type === 'image/png' || selectedFile.type === 'image/svg' || selectedFile.type === 'image/jpeg' || selectedFile.type === 'image/gif' || selectedFile.type === 'image/tiff') {
+        if (selectedFile.type === 'image/png' || selectedFile.type === 'image/jpeg' || selectedFile.type === 'image/gif' || selectedFile.type === 'image/tiff' || selectedFile.type === 'image/webp') {
           setWrongImageType(false);
           setLoading(true);
           const config = {
@@ -59,7 +59,7 @@ const ImageUploader = ({setImageAsset,profilePage}) => {
                   </div>
 
                   <p className={`text-gray-300 text-md ${profilePage?'my-4 p-4 text-[12px]':'mt-16 p-4'}`}>
-                    Use high-quality JPG, JPEG, SVG, PNG, GIF or TIFF less than 20MB
+                    Use high-quality JPG, JPEG,WEBP, PNG, GIF or TIFF less than 20MB
                   </p>
                 </div>
                 <input

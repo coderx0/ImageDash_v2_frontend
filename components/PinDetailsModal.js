@@ -176,7 +176,17 @@ const PinDetailsModal = (props) => {
         )}
         
         <div className='flex py-2 px-1 md:px-4 w-full flex-col md:flex-row'>
-          <Comment session={session} pinId={pinDetail._id} setMoreDetails={setMoreDetails} comments={moreDetails?.comments}/>
+          <Comment
+            session={session}
+            pinId={pinDetail._id}
+            setMoreDetails={setMoreDetails}
+            comments={moreDetails?.comments}
+            setloginImage={setloginImage}
+                  setLoginMessage={setLoginMessage}
+                  setShowLoginModal={setShowLoginModal}
+            imageUrl={pinDetail.image.asset.url}
+            pinTitle= {pinDetail.title}
+                  />
           <div className='md:w-[60%]'>
           {pins?.length > 0 && (
         <h2 className="text-center font-bold text-2xl mt-8 mb-4">

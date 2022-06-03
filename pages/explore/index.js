@@ -1,24 +1,35 @@
-import React from 'react'
-import { cdnClient } from '../../lib/sanityClient';
-import { collectionFeedQuery,categoryQuery } from '../../lib/Data';
-import CollectionFeed from '../../components/CollectionFeed';
+import React, { useState } from 'react'
+import { cdnClient, client } from '../../lib/sanityClient';
+import { categoryQuery } from '../../lib/Data';
 import Layout from "../../components/Layout";
 import Feed from "../../components/Feed";
 import Link from 'next/link';
-
-const breakPointObj = {
-    default: 4,
-    1200: 3,
-    900: 2,
-    600: 1
-}
+import InfiniteScroll from 'react-infinite-scroller';
 
 const Explore = ({ categoryData }) => {
+    const [disable, setDisable] = useState(false);
+    const [start, setStart] = useState(2);
+    const [end, setEnd] = useState(3);
 
+    const loadmore = async () => {
+        console.log('triggered');
+        const data = await client.fetch(categoryQuery(start, end));
+        if (data.length < 1)
+          setDisable(true);
+        
+          categoryData.push(...data);
+        setStart(prev => prev + 1);
+        setEnd(prev => prev + 1);
+    }
+    
   return (
-      <Layout>
-          <div>
-              {categoryData.map(category => (
+             <InfiniteScroll
+    pageStart={0}
+    loadMore={loadmore}
+    hasMore={!disable}
+    loader={<div className="loader" key={0}>Loading ...</div>}
+> 
+     {categoryData.map(category => (
                   <div key={category._id}
                   className="mx-2 md:mx-6 mt-2">
                       <div className='flex gap-4 items-center'>
@@ -37,16 +48,16 @@ const Explore = ({ categoryData }) => {
                     <Feed pins={category.pins}/>
                   </div>
               ))}
-          </div>
+      </InfiniteScroll>
+         
         
-      </Layout>
   )
 }
 
 export default Explore;
 
 export async function getStaticProps() {
-        const categoryData = await cdnClient.fetch(categoryQuery);
+        const categoryData = await cdnClient.fetch(categoryQuery(0,2));
 
     return {
         props: {

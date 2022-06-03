@@ -70,6 +70,28 @@ const UserProfile = ({ user: userData }) => {
 
   useEffect(() => {
     if (userId) {
+      const query = `*[_type == "user" && _id == '${userId}']{
+        _id,
+        userName,
+        about,
+        image,
+        bannerImage,
+        followers[]{
+          followedBy->{
+            _id
+          }
+        },
+        following[]{
+          following->{
+            _id,
+          }
+        }
+      }`;
+    
+      client.fetch(query).then(data => {
+        setUser(data[0]);
+      });
+
       fetch(`/api/data/createdPins/${userId}`).then(response => response.json()).then(data => {
         setPins(data.pins);
         setUploadCount(data?.pins?.length);
@@ -292,30 +314,30 @@ const UserProfile = ({ user: userData }) => {
 
 export default UserProfile;
 
-export async function getServerSideProps(context) {
-  const { userId } = context?.params;
-  const query = `*[_type == "user" && _id == '${userId}']{
-    _id,
-    userName,
-    about,
-    image,
-    bannerImage,
-    followers[]{
-      followedBy->{
-        _id
-      }
-    },
-    following[]{
-      following->{
-        _id,
-      }
-    }
-  }`;
+// export async function getServerSideProps(context) {
+//   const { userId } = context?.params;
+//   const query = `*[_type == "user" && _id == '${userId}']{
+//     _id,
+//     userName,
+//     about,
+//     image,
+//     bannerImage,
+//     followers[]{
+//       followedBy->{
+//         _id
+//       }
+//     },
+//     following[]{
+//       following->{
+//         _id,
+//       }
+//     }
+//   }`;
 
-  const data = await client.fetch(query);
-  return {
-    props: {
-      user:data[0]
-    }
-  }
-}
+//   const data = await client.fetch(query);
+//   return {
+//     props: {
+//       user:data[0]
+//     }
+//   }
+// }

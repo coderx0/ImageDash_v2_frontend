@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from "next/image";
 import defaultProfile from "../public/images/defaultProfile.png"
 
-const Comment = ({session,pinId,setMoreDetails,comments}) => {
+const Comment = ({session,pinId,setMoreDetails,comments,pinTitle,setloginImage,setLoginMessage,setShowLoginModal,imageUrl}) => {
     const [comment, setComment] = useState('');
     const [addingComment, setAddingComment] = useState(false);
 
@@ -16,9 +16,14 @@ const Comment = ({session,pinId,setMoreDetails,comments}) => {
             setMoreDetails((prevData) => ({ ...prevData, comments: data.comments }));
             setAddingComment(false);
           })
+        } else {
+          setShowLoginModal(true);
+          setloginImage(imageUrl);
+          setLoginMessage(`Login to like the image '${pinTitle}'`);
+     
         }
     };
-    
+ 
   return (
     <div className='md:w-[40%] md:pr-4'>
       <h2 className="mt-5 text-2xl font-bold ">Comments</h2>

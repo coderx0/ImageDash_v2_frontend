@@ -42,12 +42,7 @@ export default function Home({ pins }) {
        <Feed pins={pins} />
         
       </InfiniteScroll>
-      
-      {/* {!disable && <div className="flex justify-center">
-      <button className="btn btn-info"
-      onClick={loadmore}
-      >Load more</button>
-     </div>} */}
+
     </>
   )
 }

@@ -16,7 +16,6 @@ const Pin = ({ pin,userId,setShowPinModal,setShowLoginModal,setLoginMessage,setL
 
   
   const showPin = () => {
-    // router.push(`/pindetails/${_id}`);
     setShowPinModal(pin);
   }
 
@@ -48,7 +47,10 @@ const Pin = ({ pin,userId,setShowPinModal,setShowLoginModal,setLoginMessage,setL
             <div
                 className="absolute font-semibold top-0 right-0 left-0 pr-2 p-2 bg-gradient-to-b from-slate-900" >
             <img src={postedBy.image} className="ml-1 object-cover cursor-pointer rounded-full w-8 h-8 inline-block" onClick={()=>{router.push(`/user-profile/${postedBy._id}`)}}/>
-            <span className="ml-2 sm:text-sm md:text-md cursor-pointer" onClick={()=>{router.push(`/user-profile/${postedBy._id}`)}}>
+                <span className="ml-2 sm:text-sm md:text-md cursor-pointer" onClick={() => {
+                  router.push(`/user-profile/${postedBy._id}`);
+                  setShowPinModal(null);
+}}>
               {postedBy.userName}
             </span>
         </div>

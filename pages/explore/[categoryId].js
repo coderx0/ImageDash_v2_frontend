@@ -12,6 +12,9 @@ import Feed from '../../components/Feed';
          className='h-44 relative'
          style={{
            backgroundImage: `url(${categoryData.bannerImage.asset.url})`,
+           backgroundRepeat: 'no-repeat',
+           backgroundPosition: 'center',
+           backgroundSize:'cover'
           }}>
          <div className='bg-[#11111195] p-12'>
          <h1 className='text-sky-500 font-bold text-6xl '>{categoryData.title}</h1>

@@ -11,6 +11,7 @@ import Image from 'next/image';
 import FollowUser from '../../components/FollowUser';
 import UserSettings from '../../components/UserSettings';
 import LoginModal from '../../components/LoginModal';
+import LoadingV2 from '../../lottie/LoadingV2';
 
 const breakPointObj = {
   default: 4,
@@ -100,8 +101,8 @@ const UserProfile = ({ user: userData }) => {
   }, [userId])
   
   const showOption = session ? session.user.id === userId ? true : false : false;
-  
-  if (!user) return <h1>Loading Profile</h1>;
+ 
+  if (!user) return <LoadingV2/>;
   return (
     <Layout>
          {showLoginModal &&
@@ -231,17 +232,24 @@ const UserProfile = ({ user: userData }) => {
           }
 
           {
-            text==='collection' && 
-                 <CollectionFeed viewPage='profile' collections={collections}/>
+            text === 'collection' &&
+            <div>
+              {collections.length ===0 && <h1 className='text-center m-4'>No Collections yet</h1>}  
+                {collections.length!==0 &&  <CollectionFeed viewPage='profile' collections={collections}/>
                 
-          }
+              }
+            </div>
+                  }
+   
+          
 
           {
-            text === 'followers' && <div className='flex justify-center gap-4 flex-wrap mx-2 mt-4'>
+            text === 'followers' && <div >
               {
-                !followers && <h1>No Followers Yet</h1>
+                !followers && <h1 className='text-center m-4'>No Followers Yet</h1>
               }
-                  {followers?.map(follower =>
+              <div className='flex justify-center gap-4 flex-wrap mx-2 mt-4'>
+              {followers && followers?.map(follower =>
                     <div
                        key={follower.followedBy._id}
                       className="flex flex-col w-40 border-2 bg-slate-900 rounded-box">
@@ -265,6 +273,8 @@ const UserProfile = ({ user: userData }) => {
                   </div>
                     
                   )}
+              </div>
+                 
                   </div>
           }
 
@@ -313,31 +323,3 @@ const UserProfile = ({ user: userData }) => {
 };
 
 export default UserProfile;
-
-// export async function getServerSideProps(context) {
-//   const { userId } = context?.params;
-//   const query = `*[_type == "user" && _id == '${userId}']{
-//     _id,
-//     userName,
-//     about,
-//     image,
-//     bannerImage,
-//     followers[]{
-//       followedBy->{
-//         _id
-//       }
-//     },
-//     following[]{
-//       following->{
-//         _id,
-//       }
-//     }
-//   }`;
-
-//   const data = await client.fetch(query);
-//   return {
-//     props: {
-//       user:data[0]
-//     }
-//   }
-// }

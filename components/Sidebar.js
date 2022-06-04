@@ -51,7 +51,10 @@ const Sidebar = ({ userId,sideBar, setSideBar }) => {
             {categories.map(category => <div
           className="hover:bg-slate-800 cursor-pointer flex gap-4 items-center w-full p-2"
           key={category.name}
-        onClick={()=>searchCategory(category.name)}
+              onClick={() => {
+                router.push(`/explore/${category.categoryId}`);
+                setSideBar(false);
+        }}
         >
           <Image
             src={category.image}

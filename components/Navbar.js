@@ -16,8 +16,6 @@ const Navbar = () => {
   const [sideBar, setSideBar] = useState(false);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  
-  console.log(session);
 
   useEffect(() => {
       if(session?.user?.id)

@@ -12,13 +12,6 @@ const breakPointObj = {
 
 const CollectionFeed = ({ viewPage, collections }) => {
   let showableCollections = collections;
-  // if (viewPage === 'profile')
-  //   showableCollections = collections
-  // else
-  //    showableCollections = collections.filter(collection =>
-  //       collection?.pins?.length > 0);
-    
-
   return (
            <Masonry
                 className="px-2 md:px-4 pt-8 flex gap-4"

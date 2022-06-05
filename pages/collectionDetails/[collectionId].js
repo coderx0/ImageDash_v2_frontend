@@ -1,12 +1,16 @@
 import { collectionDetailQuery } from "../../lib/Data";
 import { client } from "../../lib/sanityClient";
 import Feed from "../../components/Feed";
-import { getSession } from "next-auth/react";
+import { getSession,useSession } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const CollectionDetails = ({ collectionDetails, userID }) => {
   const [collection, setCollection] = useState(collectionDetails)
-    if (collectionDetails.error)
+  const { data: session, status } = useSession(); 
+  const router = useRouter();
+
+  if (collectionDetails.error)
         return <h1>You are not allowed.</h1>
 
     
@@ -21,8 +25,8 @@ const CollectionDetails = ({ collectionDetails, userID }) => {
           }),
           headers: { "Content-Type": 'application/json' }
         });
-      }
-    console.log(collectionDetails);
+  }
+  
     return (
         <div>
             <div className="mt-2">
@@ -30,15 +34,15 @@ const CollectionDetails = ({ collectionDetails, userID }) => {
                 <p className="text-center mt-2">{collectionDetails.about}</p>
             </div>
             <div className="flex items-center gap-4 px-4 text-xl">
-                <div className="flex-1 flex">
+                <div className="flex-1 flex cursor-pointer" onClick={()=>router.push(`/user-profile/${collectionDetails.postedBy?._id}`)}>
                     <div>
                         <img
-                            className="h-10 w-10 object-cover"
+                            className="h-10 w-10 object-cover rounded-full mx-2"
                             src={collectionDetails.postedBy?.image} alt={collectionDetails.postedBy?.username} />
                     </div>
                    <h1 className=" pt-1 pl-1"> {collectionDetails.postedBy?.userName}</h1>
                 </div>
-              {collection.postedBy._id === userID && <div className="form-control">
+              {(collection.postedBy._id === userID && session) && <div className="form-control">
   <span htmlFor='privacy' className="label">
           <label className=" mx-2">{collection.isPrivate ? 'Private' : 'Public'}</label>
           <input id='privacy' type="checkbox" onChange={changePrivacy} className="checkbox" defaultChecked={collectionDetails.isPrivate}/>
@@ -64,7 +68,7 @@ export async function getServerSideProps(context,) {
     let collectionData = data[0];
     if (!collectionData) collectionData = {error:'Not Allowed'};
 
-    console.log({ collectionData });
+   
     return {
       props: {
             collectionDetails: collectionData,

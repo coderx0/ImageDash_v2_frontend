@@ -8,6 +8,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mantine/hooks": "^4.2.8",
+    "@mantine/next": "^4.2.8",
     "@sanity/client": "^2.23.2",
     "@sanity/image-url": "^1.0.1",
     "axios": "^0.26.0",
@@ -30,7 +32,6 @@
     "react-infinite-scroller": "^1.2.6",
     "react-masonry-css": "^1.0.16",
     "react-share": "^4.4.0",
-    "react-useanimations": "^2.0.8",
     "sharp": "^0.30.3",
     "swr": "^1.2.0",
     "uuid": "^8.3.2"

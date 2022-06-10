@@ -1,7 +1,5 @@
 import React,{useState} from 'react'
 import { BsFillHeartFill,BsHeart } from "react-icons/bs";
-import UseAnimations from "react-useanimations";
-import loading from "react-useanimations/lib/loading";
 
 const LikePin = ({ likes, pinId,pinTitle, userId,setShowLoginModal,setloginImage,setLoginMessage,imageUrl}) => {
     const [likingPost, setLikingPost] = useState(false);
@@ -35,7 +33,7 @@ const LikePin = ({ likes, pinId,pinTitle, userId,setShowLoginModal,setloginImage
     <span className='mb-1 pr-2'>
       {pinLikes?pinLikes.length: likes?likes.length : <p></p>}
     </span>
-          {likingPost &&  <UseAnimations animation={loading} size={26} style={{ padding: 100,color:'white' }} />}
+          {likingPost &&  <BsFillHeartFill className='h-4 w-4'/> }
     {!likingPost && (alreadyLiked.length > 0 ? 
       <BsFillHeartFill className='h-4 w-4'/> : 
       <BsHeart className='h-4 w-4'/>)}

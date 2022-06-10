@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { MdDelete } from 'react-icons/md';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import Layout from '../components/Layout';
-import { cdnClient, client } from '../lib/sanityClient';
+import { client } from '../lib/sanityClient';
 import { availableCategories } from '../lib/Data';
 import ImageUploader from '../components/ImageUploader';
 import { getSession } from 'next-auth/react';
+import Uploading from '../lottie/Uploading';
+import { useScrollLock } from '@mantine/hooks';
+
 
 const CreatePin = ({ user,categories }) => {
   const [title, setTitle] = useState('');
@@ -16,12 +18,18 @@ const CreatePin = ({ user,categories }) => {
   const [fields, setFields] = useState();
   const [category, setCategory] = useState();
   const [imageAsset, setImageAsset] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [scrollLocked, setScrollLocked] = useScrollLock(false);
 
   const { data: session, loding } = useSession();
   const router = useRouter();
 
   const savePin = async() => {
+   
     if (title && about && destination && imageAsset?._id && category) {
+      setIsLoading(true);
+      setScrollLocked(true);
       const response = await axios.post('/api/utils/upload/saveImage', {
         title,
         about,
@@ -31,6 +39,8 @@ const CreatePin = ({ user,categories }) => {
         userId: session.user.id
       }
       );
+      setIsLoading(false);
+      setScrollLocked(false);
       router.push('/');
     } else {
       setFields(true);
@@ -45,6 +55,9 @@ const CreatePin = ({ user,categories }) => {
   };
   return (
     <Layout>
+    {isLoading && <div className='absolute top-0 bottom-0 left-0 right-0 bg-[#111441AA] z-10'>
+      <Uploading/>
+    </div>}
       <div
       className="lg:h-[89vh] flex flex-col justify-center items-center">
       {fields && (

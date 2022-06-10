@@ -9,5 +9,5 @@ export default async function handler(req, res) {
 
     const data = await client.fetch(createdPinsQuery);
 
-    res.status(200).json({ pins: data[0].pins });
+    res.status(200).json({ pins: data[0]?.pins });
 }

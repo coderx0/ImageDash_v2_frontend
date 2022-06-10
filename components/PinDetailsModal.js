@@ -10,7 +10,8 @@ import LoginModal from './LoginModal';
 import LikePin from './LikePin';
 
 const breakPointObj = {
-  default: 2,
+  default: 3,
+  800:2,
    500:1
 }
 
@@ -23,8 +24,6 @@ const PinDetailsModal = (props) => {
   const [loginMessage, setLoginMessage] = useState('');
   const [pins, setPins] = useState(null);
   const [moreDetails, setMoreDetails] = useState(null);
-  const [likingPost, setLikingPost] = useState(false);
-  const [pinLikes, setPinLikes] = useState(null);
   const [loginImage, setloginImage] = useState(null);
 
   useEffect(() => {
@@ -38,10 +37,6 @@ const PinDetailsModal = (props) => {
         });
    }
     }, [pinDetail._id]);
-  
-  let alreadyLiked = pinLikes ? pinLikes.filter((item) => item.userId === session?.user.id) :
-  moreDetails?.likes?.filter((item) => item?.likedBy?._id === session?.user?.id);
-  alreadyLiked = alreadyLiked?.length > 0 ? alreadyLiked : [];
 
  
   const closeModal = (e) => {
@@ -175,7 +170,7 @@ const PinDetailsModal = (props) => {
         </div>
         )}
         
-        <div className='flex py-2 px-1 md:px-4 w-full flex-col md:flex-row'>
+        <div className='flex py-2 px-1 md:px-4 w-full flex-col'>
           <Comment
             session={session}
             pinId={pinDetail._id}
@@ -187,7 +182,7 @@ const PinDetailsModal = (props) => {
             imageUrl={pinDetail.image.asset.url}
             pinTitle= {pinDetail.title}
                   />
-          <div className='md:w-[60%]'>
+          <div className=''>
           {pins?.length > 0 && (
         <h2 className="text-center font-bold text-2xl mt-8 mb-4">
           More like this

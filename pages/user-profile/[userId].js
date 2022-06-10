@@ -4,7 +4,6 @@ import { client } from '../../lib/sanityClient';
 import { useSession,signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Layout from "../../components/Layout";
-import Feed from "../../components/Feed";
 import Link from 'next/link';
 import CollectionFeed from '../../components/CollectionFeed';
 import Image from 'next/image';
@@ -12,6 +11,9 @@ import FollowUser from '../../components/FollowUser';
 import UserSettings from '../../components/UserSettings';
 import LoginModal from '../../components/LoginModal';
 import LoadingV2 from '../../lottie/LoadingV2';
+import UserCreatedPins from '../../components/UserCreatedPins';
+import LoadingV3 from '../../lottie/LoadingV3';
+
 
 const breakPointObj = {
   default: 4,
@@ -31,10 +33,13 @@ const UserProfile = ({ user: userData }) => {
   const [text, setText] = useState('images');
   const [activeBtn, setActiveBtn] = useState('images');
   const [uploadCount, setUploadCount] = useState(0);
-  const [followers, setFollowers] = useState([]);
-  const [collections, setCollections] = useState([]);
+  const [followers, setFollowers] = useState();
+  const [following, setFollowing] = useState();
+  const [collections, setCollections] = useState();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
+
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -44,26 +49,47 @@ const UserProfile = ({ user: userData }) => {
 
   useEffect(() => {
     if (userId) {
+      
+
       switch (text) {
         case 'images':
+          if(!pins)
+          setLoading(true);
+
           fetch(`/api/data/createdPins/${userId}`).then(response => response.json()).then(data => {
             setPins(data.pins);
             setUploadCount(data?.pins?.length);
+            setLoading(false);
           });
           break;
+
         case 'followers':
+          if(!followers)
+          setLoading(true);
+
           fetch(`/api/data/followers/${userId}`).then(response => response.json()).then(data => {
             setFollowers(data.followers.followers);
+            setLoading(false);
           });
           break;
+
         case 'following':
+          if(!following)
+          setLoading(true);
+
           fetch(`/api/data/following/${userId}`).then(response => response.json()).then(data => {
-            setFollowers(data.following.following);
+            setFollowing(data.following.following);
+            setLoading(false);
           });
           break;
+
         case 'collection':
+          if(!collections)
+          setLoading(true);
+
           fetch(`/api/data/collections/${userId}`).then(response => response.json()).then(data => {
             setCollections(data.collections);
+            setLoading(false);
           });
       }
   }
@@ -96,6 +122,9 @@ const UserProfile = ({ user: userData }) => {
       fetch(`/api/data/createdPins/${userId}`).then(response => response.json()).then(data => {
         setPins(data.pins);
         setUploadCount(data?.pins?.length);
+        setText('images');
+        setActiveBtn('images');
+        setCollections(null);
       });
     }
   }, [userId])
@@ -207,35 +236,20 @@ const UserProfile = ({ user: userData }) => {
        
         </div>
    
+   {
+    loading && <LoadingV3/>
+   }
           {
-            (text === 'images' || text === 'saved') &&
-              (!pins ?
-              session ?
-                session.user.id === userId ?
-                (
-        <div className="flex flex-col gap-4 justify-center font-bold items-center w-full text-1xl mt-2">
-                  <span className='mt-4 font-normal'>
-                  No Images Uploaded Yet.
-                  </span>
-                  <Link href='/createPin'>
-      <a className='btn btn-info'>
-      Upload
-    </a></Link>
-        </div>
-                  )
-                  : <h1 className='text-center m-6'>User has not uploaded any Image yet.</h1>
-                :<h1 className='text-center m-6'>User has not uploaded any Image yet.</h1>
-                :
-                <div className="px-2">
-            <Feed pins={pins}/>
-                </div>)
+            (text === 'images' && pins) &&
+
+           <UserCreatedPins loading={loading} uploadedPins={pins} session={session} userId={userId}/>
           }
 
           {
             text === 'collection' &&
             <div>
-              {collections.length ===0 && <h1 className='text-center m-4'>No Collections yet</h1>}  
-                {collections.length!==0 &&  <CollectionFeed viewPage='profile' collections={collections}/>
+              {collections?.length==0 && <h1 className='text-center m-4'>No Collections yet</h1>}  
+                {collections &&  <CollectionFeed viewPage='profile' collections={collections}/>
                 
               }
             </div>
@@ -251,22 +265,22 @@ const UserProfile = ({ user: userData }) => {
               <div className='flex justify-center gap-4 flex-wrap mx-2 mt-4'>
               {followers && followers?.map(follower =>
                     <div
-                       key={follower.followedBy._id}
+                       key={follower.followedBy?._id}
                       className="flex flex-col w-40 border-2 bg-slate-900 rounded-box">
                       <div className='flex bg-stone-800 rounded-box h-24 items-center justify-center p-2'>
                       <Image
-                        src={follower.followedBy.image}
+                        src={follower.followedBy?.image}
                         height={50}
                         width={50}
                         className="object-cover rounded-full"
                         />
-                        <h2 className="font-semibold text-xl p-2">{follower.followedBy.userName}</h2>
+                        <h2 className="font-semibold text-xl p-2">{follower.followedBy?.userName}</h2>
                      </div>
                                             
                       <p className='px-2 text-sm text-stone-300 py-4 text-center'>Just Wandering about here and there</p>
                
                       <Link             
-                        href={`/user-profile/${follower.followedBy._id}`}>
+                        href={`/user-profile/${follower.followedBy?._id}`}>
                     
                           <button className="btn w-[90%] m-2 btn-info">View Profile</button>
                           </Link>
@@ -281,9 +295,9 @@ const UserProfile = ({ user: userData }) => {
           {
             text === 'following' && <div className='flex justify-center gap-4 flex-wrap mx-2 mt-4'>
             {
-                !followers && <h1>Not Following anyone yet</h1>
+                !following && <h1>Not Following anyone yet</h1>
               }    
-              {followers?.map(follower =>
+              {following?.map(follower =>
                     <div
                        key={follower.following?._id}
                       className="flex flex-col w-40 border-2 bg-slate-900 rounded-box">

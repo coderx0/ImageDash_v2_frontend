@@ -25,7 +25,7 @@ const Comment = ({session,pinId,setMoreDetails,comments,pinTitle,setloginImage,s
     };
  
   return (
-    <div className='md:w-[40%] md:pr-4'>
+    <div className=''>
       <h2 className="mt-5 text-2xl font-bold ">Comments</h2>
       
       <div className="max-h-[40vh] md:max-h-full overflow-y-auto">
@@ -65,7 +65,7 @@ const Comment = ({session,pinId,setMoreDetails,comments,pinTitle,setloginImage,s
         </Link>
      </div>
         <input
-          className="flex-1 input input-bordered"
+          className="flex-1 sm:flex-none sm:w-[50%] input input-bordered"
           type="text"
           placeholder="Add a comment"
           value={comment}

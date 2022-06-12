@@ -8,6 +8,7 @@ import FollowUser from "./FollowUser";
 import Comment from './Comment';
 import LoginModal from './LoginModal';
 import LikePin from './LikePin';
+import { useScrollLock } from '@mantine/hooks';
 
 const breakPointObj = {
   default: 3,
@@ -16,6 +17,8 @@ const breakPointObj = {
 }
 
 const PinDetailsModal = (props) => {
+  
+  const [scrollLocked, setScrollLocked] = useScrollLock(true);
   
   const pinDetail = props?.pinDetail;
   const setShowPinModal = props?.setShowPinModal;

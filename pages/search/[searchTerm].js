@@ -29,6 +29,7 @@ const SearchTerm = ({ searchedPins, searchTerm }) => {
 
 export default SearchTerm;
 
+
 export async function getServerSideProps(context) {
     const { searchTerm } = context.params;
     const query = searchQuery(searchTerm);
@@ -38,6 +39,6 @@ export async function getServerSideProps(context) {
         props: {
             searchedPins: data,
             searchTerm
-        }
+        },
     }
 }

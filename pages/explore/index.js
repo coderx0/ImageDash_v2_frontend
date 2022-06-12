@@ -13,7 +13,6 @@ const Explore = ({ categoryData }) => {
   const router = useRouter();
 
     const loadmore = async () => {
-        console.log('triggered');
         const data = await client.fetch(categoryQuery(start, end));
         if (data.length < 1)
           setDisable(true);

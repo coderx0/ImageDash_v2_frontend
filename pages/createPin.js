@@ -9,20 +9,20 @@ import ImageUploader from '../components/ImageUploader';
 import { getSession } from 'next-auth/react';
 import Uploading from '../lottie/Uploading';
 import { useScrollLock } from '@mantine/hooks';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const CreatePin = ({ user,categories }) => {
   const [title, setTitle] = useState('');
   const [about, setAbout] = useState('');
   const [destination, setDestination] = useState();
-  const [fields, setFields] = useState();
   const [category, setCategory] = useState();
   const [imageAsset, setImageAsset] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const [scrollLocked, setScrollLocked] = useScrollLock(false);
 
-  const { data: session, loding } = useSession();
+  const { data: session, loading } = useSession();
   const router = useRouter();
 
   const savePin = async() => {
@@ -43,26 +43,33 @@ const CreatePin = ({ user,categories }) => {
       setScrollLocked(false);
       router.push('/');
     } else {
-      setFields(true);
-
-      setTimeout(
-        () => {
-          setFields(false);
+      toast.error('Please add all fields',{
+        duration: 4000,
+        position: 'top-center',
+        // Styling
+        style: {
+            background: '#f25f4c',
+            color: '#fff',
+            fontWeight:'bold'
+            },
+        
+        // Aria
+        ariaProps: {
+            role: 'status',
+            'aria-live': 'polite',
         },
-        2000,
-      );
+        });
     }
   };
   return (
     <Layout>
+    <Toaster/>
     {isLoading && <div className='absolute top-0 bottom-0 left-0 right-0 bg-[#111441AA] z-10'>
       <Uploading/>
     </div>}
       <div
       className="lg:h-[89vh] flex flex-col justify-center items-center">
-      {fields && (
-        <p className="text-red-500 mb-5 text-xl transition-all duration-150 ease-in ">Please add all fields.</p>
-      )}
+     
       <div className=" flex lg:flex-row flex-col justify-center items-center bg-[black] rounded-3xl lg:p-5 p-3 lg:w-4/5  w-full">
           <ImageUploader imageAsset={imageAsset} setImageAsset={setImageAsset}/>
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import { cdnClient } from '../../lib/sanityClient';
-import { categoryDetailQuery } from '../../lib/Data';
+import { categories, categoryDetailQuery } from '../../lib/Data';
 import Feed from '../../components/Feed';
 
+
  const CategotyDetails = ({categoryData}) => {
-   console.log(categoryData);
 
    return (
      <>
@@ -31,8 +31,19 @@ import Feed from '../../components/Feed';
 
 export default CategotyDetails;
 
-export async function getServerSideProps(context) {
+export async function getStaticPaths(){
+  const categoryIds = categories.map(category=>category.categoryId);
+
+    return {
+      paths: categoryIds.map(cId=>({params:{categoryId:cId}})),
+      fallback:true
+    }
+}
+
+
+export async function getStaticProps(context) {
   const {categoryId} = context.params;
+  
   const query = categoryDetailQuery(categoryId)
   const categoryData = await cdnClient.fetch(query);
 
@@ -40,5 +51,6 @@ export async function getServerSideProps(context) {
     props: {
       categoryData:categoryData[0]
       },
+    revalidate: 3600
   }
 }

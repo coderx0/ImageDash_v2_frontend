@@ -191,10 +191,10 @@ const Auth = () => {
           Sign up with Google</span>
       </div>
 
-                                <p className="mt-6 text-md text-center text-gray-400">Already have an account?
+                                <div className="mt-6 text-md text-center text-gray-400">Already have an account?
                                     <Link href='/login'>
                                         <h1 className="text-sky-400">Login</h1>
-                                    </Link></p>
+                                    </Link></div>
                     </div>
                 </div>
             </div>

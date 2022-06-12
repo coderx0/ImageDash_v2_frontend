@@ -7,8 +7,6 @@ export default async function handler(req, res) {
         .patch(collectionItem._id)
         .unset([`pins[_key=="${pinId}pin"]`])
         .commit();
-    
-    console.log(data);
 
     res.status(200).json({ success:'removed' });
 }

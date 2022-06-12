@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { client } from '../../lib/sanityClient';
 import { useSession,signOut } from 'next-auth/react';
@@ -13,14 +13,6 @@ import LoginModal from '../../components/LoginModal';
 import LoadingV2 from '../../lottie/LoadingV2';
 import UserCreatedPins from '../../components/UserCreatedPins';
 import LoadingV3 from '../../lottie/LoadingV3';
-
-
-const breakPointObj = {
-  default: 4,
-  1100: 3,
-  900: 2,
-  600: 1
-}
 
 
 const activeBtnStyles = 'btn text-[0.7rem] sm:text-[1rem] text-sky-500 font-bold rounded-none';
@@ -49,8 +41,6 @@ const UserProfile = ({ user: userData }) => {
 
   useEffect(() => {
     if (userId) {
-      
-
       switch (text) {
         case 'images':
           if(!pins)

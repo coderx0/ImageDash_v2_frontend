@@ -49,7 +49,6 @@ const LoginModal = ({loginMessage,compType,setShowLoginModal,loginImage}) => {
 
   } 
   const closeModal = (e) => {
-    console.log(e.target.id);
     if (e.target.id === 'loginBackdrop')
     {
       setShowLoginModal(false);
@@ -147,7 +146,7 @@ const LoginModal = ({loginMessage,compType,setShowLoginModal,loginImage}) => {
       
       </div>}
       {
-        compType === 'page' && <div className='flex items-center h-[90vh] '>
+        compType === 'page' && <div className='flex items-center h-[90vh]'>
           <Toaster/>
           {mainComponent}
         </div>

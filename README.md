@@ -1,12 +1,16 @@
-## Getting Started
 
-It is frontend part of a simple image sharing app created as a hobby project using Next.js , sanity, tailwindcss
+## It is frontend part of a simple image sharing app created as a hobby project using Next.js , sanity, tailwindcss
 
-Features:
+### Features:
 image upload, share , like , comment, search by category or title
+
 upload history
+
 follow other user
+
 create collection of images
+
+daily top uploaders and top images
 
 Live: [https://imagedash.vercel.app/](https://imagedash.vercel.app/)
 

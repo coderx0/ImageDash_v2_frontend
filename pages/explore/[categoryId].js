@@ -11,7 +11,7 @@ import Feed from '../../components/Feed';
        <div
          className='h-44 relative'
          style={{
-           backgroundImage: `url(${categoryData.bannerImage.asset.url})`,
+           backgroundImage: `url(${categoryData?.bannerImage.asset.url})`,
            backgroundRepeat: 'no-repeat',
            backgroundPosition: 'center',
            backgroundSize:'cover'

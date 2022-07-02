@@ -124,7 +124,7 @@ const Auth = () => {
 
     const googleSignup = () => {
         localStorage.setItem('authType', 'signup');
-        signIn('google','http://localhost:3000/authentication');
+        signIn('google','https://imagedash.vercel.app/');
     };
     
     return (

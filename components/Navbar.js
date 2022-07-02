@@ -87,7 +87,7 @@ const Navbar = () => {
           .then(data => {
             if (!data.sanityData)
             {
-              signOut({redirect:false});      
+              signOut({redirect:false,});
               toast.error("You don't have any account please signup.",{
                             duration: 4000,
                             position: 'top-right',
@@ -105,6 +105,7 @@ const Navbar = () => {
                               'aria-live': 'polite',
                             },
                           }); 
+              router.push('/authentication');
             }
             setUserData(data.sanityData)
           });

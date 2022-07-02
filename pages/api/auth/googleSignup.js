@@ -16,10 +16,10 @@ async function handler(req, res) {
   const mailData = await client.fetch(mailQuery);
   
   if (mailData.length > 0) {
-    res.status(200).json({ errorMessage: "account with provided email already exists." });
+    res.status(200).json({ errorMessage: "account with provided email already exists. Sign in instead." });
     }
-    
-    const doc = {
+    else{
+      const doc = {
         _type: 'user',
         _id:id,
         userName: userName,
@@ -27,8 +27,10 @@ async function handler(req, res) {
         image:'https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-man-default-avatar-png-image_2813122.jpg'
       };
       const response = await client.create(doc);
-      res.status(200).json({ successMessage: "Account created successfully" });
-  
+
+      res.status(200).json({userData:response ,successMessage: "Account created successfully" });
+
+    }  
 }
 
 export default handler;

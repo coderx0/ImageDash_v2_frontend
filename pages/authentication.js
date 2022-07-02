@@ -187,7 +187,7 @@ const Auth = () => {
           <FcGoogle className='w-6 h-6' />
         </div>
 
-        <span className="w-5/6 px-4 py-3 font-bold text-center">
+        <span className="w-5/6 px-4 py-3 font-bold text-center cursor-pointer">
           Sign up with Google</span>
       </div>
 

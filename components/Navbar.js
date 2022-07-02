@@ -11,17 +11,16 @@ import toast, { Toaster } from 'react-hot-toast';
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [userData, setUserData] = useState(null);
-  const [authAlert, setAuthAlert] = useState(null);
   const searchInputRef = useRef();
   const [sideBar, setSideBar] = useState(false);
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
       if(session?.user?.id)
       {
         if (localStorage.getItem('authType') === 'signup') {
           if (session?.user) {
+            
             fetch('/api/auth/googleSignup', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -35,7 +34,6 @@ const Navbar = () => {
             }).then((response) => response.json())
                 .then(data => {
                     if (data.errorMessage) {
-                        setLoading(false);
                         toast.error(data.errorMessage,{
                             duration: 4000,
                             position: 'top-right',
@@ -52,13 +50,14 @@ const Navbar = () => {
                               role: 'status',
                               'aria-live': 'polite',
                             },
-                          });
-                        // setAuthAlert({type:"error",message:data.errorMessage});
-                        setLoading(false);    
+                          });  
+                          
+              signOut({redirect:false});  
                     return;
                     }
-                    if (data.successMessage)
+                    if (data.successMessage.length>0)
                     {
+                      setUserData(data.userData);
                         toast.success(data.successMessage,{
                             duration: 4000,
                             position: 'top-right',
@@ -76,8 +75,6 @@ const Navbar = () => {
                                 'aria-live': 'polite',
                             },
                             });
-                        // setAuthAlert({type:"success",message: data.successMessage});
-                        setLoading(false);
                     }
                 });
                 
@@ -90,17 +87,30 @@ const Navbar = () => {
           .then(data => {
             if (!data.sanityData)
             {
-              signOut({redirect:false});
-              setAuthAlert("you dont have any account. Please signup");
+              signOut({redirect:false});      
+              toast.error("You don't have any account please signup.",{
+                            duration: 4000,
+                            position: 'top-right',
+                            // Styling
+                            style: {
+                                background: '#f25f4c',
+                                color: '#fff',
+                                fontWeight:'bold'
+                              },
+                            className: 'bg-red-200',
+                         
+                            // Aria
+                            ariaProps: {
+                              role: 'status',
+                              'aria-live': 'polite',
+                            },
+                          }); 
             }
             setUserData(data.sanityData)
           });
       } 
-  }, [session?.user.id]);
+  }, [session]);
 
-  useEffect(() => {
-    setTimeout(() => setAuthAlert(null), 6000);
-  }, [authAlert]);
 
   const submitSearch = (event) => {
     event.preventDefault();
@@ -113,9 +123,10 @@ const Navbar = () => {
 }
     return (
       <>
-         {authAlert && <div className="shadow-lg flex justify-around p-6 rounded-box absolute m-8 text-[20px] right-0 w-72 z-30 bg-red-500">
+      <Toaster/>
+         {/* {authAlert && <div className="shadow-lg flex justify-around p-6 rounded-box absolute m-8 text-[20px] right-0 w-72 z-30 bg-red-500">
     <span>{authAlert}</span>
-        </div>}
+        </div>} */}
         <Sidebar userId={session?.user.id} sideBar={sideBar} setSideBar={setSideBar}/>
         <div className="bg-stone-900 border-b-2 border-sky-500 font-bold h-16 relative sticky top-0 z-10 text-3xl flex items-center gap-2">
           <button className="btn btn-square relative" onClick={openSideBar}>

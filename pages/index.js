@@ -1,7 +1,6 @@
 import { cdnClient } from "../lib/sanityClient";
 import { feedQuery } from "../lib/Data";
 import Feed from "../components/Feed";
-
 import { useState } from "react";
 import InfiniteScroll from 'react-infinite-scroller';
 

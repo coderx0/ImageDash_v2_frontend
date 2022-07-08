@@ -1,34 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { cdnClient, client } from '../../lib/sanityClient';
 import { categoryQuery } from '../../lib/Data';
-import Layout from "../../components/Layout";
 import Feed from "../../components/Feed";
-import InfiniteScroll from 'react-infinite-scroller';
-import { useRouter } from 'next/router';
 
 const Explore = ({ categoryData }) => {
-    const [disable, setDisable] = useState(false);
-    const [start, setStart] = useState(2);
-  const [end, setEnd] = useState(3);
-  const router = useRouter();
-
-    const loadmore = async () => {
-        const data = await client.fetch(categoryQuery(start, end));
-        if (data.length < 1)
-          setDisable(true);
-        
-          categoryData.push(...data);
-        setStart(prev => prev + 1);
-        setEnd(prev => prev + 1);
-    }
-    
+ 
   return (
-             <InfiniteScroll
-    pageStart={0}
-    loadMore={loadmore}
-    hasMore={!disable}
-    loader={<div className="loader" key={0}>Loading ...</div>}
-> 
+    <>
      {categoryData.map(category => (
                   <div key={category._id}
                   className="mx-2 md:mx-6 mt-2">
@@ -47,8 +25,7 @@ const Explore = ({ categoryData }) => {
                     <Feed pins={category.pins}/>
                   </div>
               ))}
-      </InfiniteScroll>
-         
+      </>
         
   )
 }
@@ -56,7 +33,7 @@ const Explore = ({ categoryData }) => {
 export default Explore;
 
 export async function getStaticProps() {
-        const categoryData = await cdnClient.fetch(categoryQuery(0,2));
+        const categoryData = await cdnClient.fetch(categoryQuery(0,4));
 
     return {
         props: {

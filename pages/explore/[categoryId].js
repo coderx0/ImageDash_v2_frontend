@@ -33,7 +33,7 @@ export default CategotyDetails;
 
 export async function getStaticPaths(){
   const categoryIds = categories.map(category=>category.categoryId);
-console.log(categoryIds);
+
 
     return {
       paths: categoryIds.map(cId=>({params:{categoryId:cId}})),
@@ -47,7 +47,6 @@ export async function getStaticProps(context) {
   
   const query = categoryDetailQuery(categoryId)
   const categoryData = await cdnClient.fetch(query);
-console.log(categoryData);
 
   return {
     props: {
